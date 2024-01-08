@@ -36,7 +36,7 @@ class Dijkstra:
         self.destination_node = self.get_min_dist_package_node()
 
         shortest_path = self.get_shortest_path()
-        
+
         return shortest_path
 
     def get_min_dist_package_node(self):
