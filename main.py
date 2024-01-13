@@ -1,4 +1,4 @@
-from infra_libarrys.infra_classes.Dijkstra import Dijkstra
+from infra_libarrys.infra_classes.SearchAlgorithem.Dijkstra import Dijkstra
 from infra_libarrys.infra_functions.infra_functions import parse_args
 from infra_libarrys.infra_functions.parser_functions import get_flow_args
 from collections import defaultdict

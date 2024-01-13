@@ -3,8 +3,8 @@ from infra_libarrys.consts_and_enums.agents_consts import AgentConsts
 
 
 class InterferingAgent(Agent):
-    def __init__(self, starting_node, grid):
-        super().__init__(starting_node, grid)
+    def __init__(self, curr_node, grid):
+        super().__init__(curr_node, grid)
         self.tag = AgentConsts.INTERFERING_AGENT_FLAG
 
     def run_agent_step(self):
