@@ -7,7 +7,7 @@ from infra_libarrys.infra_classes.Agent.InterferingAgent import InterferingAgent
 from infra_libarrys.infra_classes.Agent.HumanAgent import HumanAgent
 from infra_libarrys.infra_classes.Agent.NormalAgent import NormalAgent
 from infra_libarrys.consts_and_enums.parser_consts import ParserFlags
-from infra_libarrys.infra_classes.Grid import Grid
+from infra_libarrys.infra_classes.Env import Env
 
 
 def get_flow_args(parser_dict):
@@ -40,8 +40,8 @@ def get_grid(parser_dict):
     y = parser_dict[ParserFlags.Y][0]
     blocked_edges = parser_dict[ParserFlags.B]
     fragile_edges = parser_dict[ParserFlags.F]
-    gird = Grid(x, y, blocked_edges=blocked_edges, fragile_edges=fragile_edges)
-    return gird
+    env = Env(x, y, blocked_edges=blocked_edges, fragile_edges=fragile_edges)
+    return env
 
 
 def parse_x_flag(line, parser_dict):

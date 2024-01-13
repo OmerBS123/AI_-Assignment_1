@@ -25,7 +25,7 @@ if __name__ == "__main__":
     parse_args(config_path, parser_dict)
     grid, agents_list, package_appear_dict, package_disappear_dict = get_flow_args(parser_dict)
     for package in  package_appear_dict.values():
-        package.add_self_to_grid(grid)
+        package.add_self_to_env(grid)
 
     djkstra_algo = Dijkstra(grid.graph[0][0], grid)
     shortes_path = djkstra_algo.run_dijkstra()

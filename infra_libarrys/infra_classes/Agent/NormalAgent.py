@@ -4,8 +4,8 @@ from infra_libarrys.infra_classes.SearchAlgorithem.Dijkstra import Dijkstra
 
 
 class NormalAgent(Agent):
-    def __init__(self, curr_node, grid):
-        super().__init__(curr_node, grid)
+    def __init__(self, curr_node, env):
+        super().__init__(curr_node, env)
         self.tag = AgentConsts.NORMAL_AGENT_FLAG
 
     def run_agent_step(self):
@@ -26,8 +26,8 @@ class NormalAgent(Agent):
 
     def get_search_algo(self):
         if self.package is not None:
-            destination_node = self.grid.graph[self.package.dest_pos_x][self.package.dest_pos_y]
-            dijkstra_algo = Dijkstra(start_node=self.curr_node, grid=self.grid, destination_node=destination_node)
+            destination_node = self.env.graph[self.package.dest_pos_x][self.package.dest_pos_y]
+            dijkstra_algo = Dijkstra(start_node=self.curr_node, env=self.env, destination_node=destination_node)
         else:
-            dijkstra_algo = Dijkstra(start_node=self.curr_node, grid=self.grid)
+            dijkstra_algo = Dijkstra(start_node=self.curr_node, env=self.env)
         return dijkstra_algo

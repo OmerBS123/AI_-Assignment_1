@@ -19,4 +19,4 @@ class Flow:
 
         if self.timer in self.package_disappear_dict:
             for curr_package in self.package_disappear_dict[self.timer]:
-                curr_package.remove_self_from_grid(self.grid)
+                curr_package.remove_self_from_env(self.grid)

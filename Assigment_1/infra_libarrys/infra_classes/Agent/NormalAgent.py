@@ -3,8 +3,8 @@ from infra_libarrys.consts_and_enums.agents_consts import AgentConsts
 
 
 class NormalAgent(Agent):
-    def __init__(self, curr_node, grid):
-        super().__init__(curr_node, grid)
+    def __init__(self, curr_node, env):
+        super().__init__(curr_node, env)
         self.tag = AgentConsts.NORMAL_AGENT_FLAG
 
     def run_agent_step(self):

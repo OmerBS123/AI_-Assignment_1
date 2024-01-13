@@ -8,7 +8,7 @@ class Package:
         self.time_delivery = time_delivery
         self.agent = None
 
-    def remove_self_from_grid(self, grid):
+    def remove_self_from_env(self, grid):
         if self.agent:
             self.agent.remove_package()
             self.agent = None

@@ -1,6 +1,6 @@
 class Agent:
-    def __init__(self, curr_node, grid):
-        self.grid = grid
+    def __init__(self, curr_node, env):
+        self.env = env
         self.curr_node = curr_node
         self.package = None
         self.time_left_to_cross_edge = 0

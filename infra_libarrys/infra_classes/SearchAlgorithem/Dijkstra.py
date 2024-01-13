@@ -5,12 +5,12 @@ from infra_libarrys.infra_classes.SearchAlgorithem.SearchAlgorithm import Search
 
 
 class Dijkstra(SearchAlgorithm):
-    def __init__(self, start_node, grid, destination_node=None):
-        super().__init__(start_node, grid, destination_node=destination_node)
-        self.distances = {node: float('inf') for node in self.grid.nodes}
-        self.previous = {node: None for node in self.grid.nodes}
+    def __init__(self, start_node, env, destination_node=None):
+        super().__init__(start_node, env, destination_node=destination_node)
+        self.distances = {node: float('inf') for node in self.env.nodes}
+        self.previous = {node: None for node in self.env.nodes}
         self.heap = []
-        self.nodes_with_package = [node for node in self.grid.nodes if node.package is not None]
+        self.nodes_with_package = [node for node in self.env.nodes if node.package is not None]
 
     def run_search(self):
         if not self.nodes_with_package:
