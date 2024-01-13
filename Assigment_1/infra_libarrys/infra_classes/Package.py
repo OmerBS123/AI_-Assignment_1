@@ -8,9 +8,12 @@ class Package:
         self.time_delivery = time_delivery
         self.agent = None
 
-    def remove_self_from_env(self, grid):
+    def remove_self_from_env(self, env):
         if self.agent:
             self.agent.remove_package()
             self.agent = None
         else:
-            grid[self.pos_x][self.pos_y].remove_package()
+            env[self.pos_x][self.pos_y].remove_package()
+
+    def add_self_to_env(self, env):
+        env.graph[self.pos_x][self.pos_y].add_package(self)

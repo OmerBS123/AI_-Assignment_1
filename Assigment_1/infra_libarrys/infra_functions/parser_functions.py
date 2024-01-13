@@ -11,31 +11,31 @@ from infra_libarrys.infra_classes.Env import Env
 
 
 def get_flow_args(parser_dict):
-    grid = get_grid(parser_dict)
-    agents_list = get_agents_list(parser_dict, grid)
+    env = get_env(parser_dict)
+    agents_list = get_agents_list(parser_dict, env)
     package_appear_dict, package_disappear_dict = get_package_dict(parser_dict)
-    return grid, agents_list, package_appear_dict, package_disappear_dict
+    return env, agents_list, package_appear_dict, package_disappear_dict
 
 
 def get_package_dict(parser_dict):
     return {package.time_appearance: package for package in parser_dict[ParserFlags.P]}, {package.time_delivery + 1: package for package in parser_dict[ParserFlags.P]}
 
 
-def get_agents_list(parser_dict, grid):
+def get_agents_list(parser_dict, env):
     agents_list = []
     for agent_flag, x, y in parser_dict[ParserFlags.AGENTS]:
-        curr_node = grid.graph[x][y]
+        curr_node = env.graph[x][y]
         if agent_flag == AgentConsts.NORMAL_AGENT_FLAG:
-            agents_list.append(NormalAgent(curr_node, grid))
+            agents_list.append(NormalAgent(curr_node, env))
         elif agent_flag == AgentConsts.INTERFERING_AGENT_FLAG:
-            agents_list.append(InterferingAgent(curr_node, grid))
+            agents_list.append(InterferingAgent(curr_node, env))
         else:
-            agents_list.append(HumanAgent(curr_node, grid))
+            agents_list.append(HumanAgent(curr_node, env))
 
     return agents_list
 
 
-def get_grid(parser_dict):
+def get_env(parser_dict):
     x = parser_dict[ParserFlags.X][0]
     y = parser_dict[ParserFlags.Y][0]
     blocked_edges = parser_dict[ParserFlags.B]
