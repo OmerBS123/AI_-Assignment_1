@@ -14,3 +14,6 @@ class Package:
             self.agent = None
         else:
             grid[self.pos_x][self.pos_y].remove_package()
+
+    def add_self_to_grid(self, grid):
+        grid.graph[self.pos_x][self.pos_y].add_package(self)

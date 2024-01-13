@@ -15,7 +15,7 @@ class Flow:
     def update_packages_state_if_needed(self):
         if self.timer in self.package_appear_dict:
             for curr_new_package in self.package_appear_dict[self.timer]:
-                self.grid.grid[curr_new_package.pos_x][curr_new_package.pos_y].add_package(curr_new_package)
+                self.grid.graph[curr_new_package.pos_x][curr_new_package.pos_y].add_package(curr_new_package)
 
         if self.timer in self.package_disappear_dict:
             for curr_package in self.package_disappear_dict[self.timer]:

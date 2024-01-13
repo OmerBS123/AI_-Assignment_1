@@ -24,7 +24,7 @@ def get_package_dict(parser_dict):
 def get_agents_list(parser_dict, grid):
     agents_list = []
     for agent_flag, x, y in parser_dict[ParserFlags.AGENTS]:
-        curr_node = grid.grid[x][y]
+        curr_node = grid.graph[x][y]
         if agent_flag == AgentConsts.NORMAL_AGENT_FLAG:
             agents_list.append(NormalAgent(curr_node, grid))
         elif agent_flag == AgentConsts.INTERFERING_AGENT_FLAG:
