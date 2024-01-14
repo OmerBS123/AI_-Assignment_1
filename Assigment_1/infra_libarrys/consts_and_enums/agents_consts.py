@@ -5,3 +5,9 @@ class AgentConsts:
     NORMAL_AGENT_FLAG = '#A'
     HUMAN_AGENT_FLAG = '#H'
     INTERFERING_AGENT_FLAG = '#I'
+
+
+class AgentName:
+    NORMAL = 'normal'
+    INTERFERING = 'interfering'
+    HUMAN = 'human'

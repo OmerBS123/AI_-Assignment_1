@@ -18,5 +18,11 @@ class Node:
     def remove_package(self):
         self.package = None
 
-    def __str__(self):
-        return f'Node({self.x}, {self.y}, has package:{self.package})'
+    def get_edge_from_node(self, other_node):
+        for edge in self.edges:
+            if other_node in edge.nodes:
+                return edge
+        return None
+
+    def get_x_y_coordinate(self):
+        return self.x, self.y

@@ -1,12 +1,13 @@
-from infra_libarrys.infra_classes.Node import Node
-from infra_libarrys.infra_classes.Edge import Edge
+from Assigment_1.infra_libarrys.infra_classes.Node import Node
+from Assigment_1.infra_libarrys.infra_classes.Edge import Edge
 
 
-class Grid:
+class Env:
     def __init__(self, width, height, blocked_edges=None, fragile_edges=None):
         self.width = width
         self.height = height
-        self.grid = [[Node(x, y) for y in range(height + 1)] for x in range(width + 1)]
+        self.graph = [[Node(x, y) for y in range(height + 1)] for x in range(width + 1)]
+        self.nodes = {node for row in self.graph for node in row}
         self.edges_dict = {}
         self.blocked_edges = blocked_edges
         self.fragile_edges = fragile_edges
@@ -41,30 +42,12 @@ class Grid:
             return
 
         edge = Edge(is_fragile=((x1, y1, x2, y2) in self.fragile_edges or (x2, y2, x1, y1) in self.fragile_edges))
-        edge.add_nodes(self.grid[x1][y1], self.grid[x2][y2])
+        edge.add_nodes(self.graph[x1][y1], self.graph[x2][y2])
         self.edges_dict[(x1, y1, x2, y2)] = edge
-        self.grid[x1][y1].edges.add(edge)
-        self.grid[x2][y2].edges.add(edge)
+        self.graph[x1][y1].add_edge(edge)
+        self.graph[x2][y2].add_edge(edge)
 
-# @staticmethod
-# def block_edge(node1, node2):
-#     if node2 in node1.neighbors:
-#         node1.neighbors.remove(node2)
-#         node2.neighbors.remove(node1)
-#
-# def add_agent(self, agent, node):
-#     agent.current_node = node
-#     node.agents.append(agent)
-#
-# def move_agent(self, agent, destination_node):
-#     if destination_node in agent.current_node.neighbors:
-#         agent.current_node.agents.remove(agent)
-#         destination_node.agents.append(agent)
-#         agent.current_node = destination_node
-#
-# def deliver_package(self, agent):
-#     if agent.current_node.delivery_point and agent.current_node.package:
-#         delivered_package = agent.current_node.package
-#         agent.current_node.package = None
-#         return delivered_package
-#     return None
+    def get_edge_from_nodes(self, node_1, node_2):
+        x1, y1 = node_1.get_x_y_coordinate()
+        x2, y2 = node_2.get_x_y_coordinate()
+        return next(self.edges_dict[edge] for edge in self.edges_dict if (x1, y1, x2, y2) == edge or (x2, y2, x1, y1) == edge)
