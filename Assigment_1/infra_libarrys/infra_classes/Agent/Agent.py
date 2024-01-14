@@ -5,6 +5,7 @@ class Agent:
         self.package = None
         self.time_left_to_cross_edge = 0
         self.curr_crossing_edge = None
+        self.agent_type = None
 
     def remove_package(self):
         self.package = None

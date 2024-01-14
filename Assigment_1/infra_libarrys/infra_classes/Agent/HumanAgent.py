@@ -3,11 +3,13 @@ import keyboard
 from Assigment_1.infra_libarrys.infra_classes.Agent.Agent import Agent
 from Assigment_1.infra_libarrys.consts_and_enums.agents_consts import AgentConsts
 from Assigment_1.infra_libarrys.consts_and_enums.keyboard_consts import KeyboardNameConsts
+from Assigment_1.infra_libarrys.consts_and_enums.agents_consts import AgentName
 
 
 class HumanAgent(Agent):
     def __init__(self, curr_node, env):
         super().__init__(curr_node, env)
+        self.agent_type = AgentName.HUMAN
         self.tag = AgentConsts.HUMAN_AGENT_FLAG
 
     def run_agent_step(self):
