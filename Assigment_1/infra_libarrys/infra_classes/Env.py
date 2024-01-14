@@ -1,5 +1,5 @@
-from infra_libarrys.infra_classes.Node import Node
-from infra_libarrys.infra_classes.Edge import Edge
+from Assigment_1.infra_libarrys.infra_classes.Node import Node
+from Assigment_1.infra_libarrys.infra_classes.Edge import Edge
 
 
 class Env:
@@ -44,7 +44,10 @@ class Env:
         edge = Edge(is_fragile=((x1, y1, x2, y2) in self.fragile_edges or (x2, y2, x1, y1) in self.fragile_edges))
         edge.add_nodes(self.graph[x1][y1], self.graph[x2][y2])
         self.edges_dict[(x1, y1, x2, y2)] = edge
-        self.graph[x1][y1].edges.add(edge)
-        self.graph[x2][y2].edges.add(edge)
+        self.graph[x1][y1].add_edge(edge)
+        self.graph[x2][y2].add_edge(edge)
 
-
+    def get_edge_from_nodes(self, node_1, node_2):
+        x1, y1 = node_1.get_x_y_coordinate()
+        x2, y2 = node_2.get_x_y_coordinate()
+        return next(self.edges_dict[edge] for edge in self.edges_dict if (x1, y1, x2, y2) == edge or (x2, y2, x1, y1) == edge)

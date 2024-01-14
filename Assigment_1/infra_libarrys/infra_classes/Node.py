@@ -23,3 +23,6 @@ class Node:
             if other_node in edge.nodes:
                 return edge
         return None
+
+    def get_x_y_coordinate(self):
+        return self.x, self.y
