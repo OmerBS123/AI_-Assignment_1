@@ -16,3 +16,5 @@ def parse_args(file_path):
 def get_flag_char(line):
     before_idx = line.find('#')
     return line[before_idx + 1]
+
+
