@@ -1,13 +1,15 @@
-from infra_libarrys.consts_and_enums.general_consts import GeneralPosConsts
-from infra_libarrys.consts_and_enums.EdgeConsts import BlockedEdgeConsts, FragileEdgeConsts
-from infra_libarrys.consts_and_enums.package_consts import PackageConsts
-from infra_libarrys.consts_and_enums.agents_consts import AgentConsts
-from infra_libarrys.infra_classes.Package import Package
-from infra_libarrys.infra_classes.Agent.InterferingAgent import InterferingAgent
-from infra_libarrys.infra_classes.Agent.HumanAgent import HumanAgent
-from infra_libarrys.infra_classes.Agent.NormalAgent import NormalAgent
-from infra_libarrys.consts_and_enums.parser_consts import ParserFlags
-from infra_libarrys.infra_classes.Env import Env
+import collections
+
+from Assigment_1.infra_libarrys.consts_and_enums.general_consts import GeneralPosConsts
+from Assigment_1.infra_libarrys.consts_and_enums.EdgeConsts import BlockedEdgeConsts, FragileEdgeConsts
+from Assigment_1.infra_libarrys.consts_and_enums.package_consts import PackageConsts
+from Assigment_1.infra_libarrys.consts_and_enums.agents_consts import AgentConsts
+from Assigment_1.infra_libarrys.infra_classes.Package import Package
+from Assigment_1.infra_libarrys.infra_classes.Agent.InterferingAgent import InterferingAgent
+from Assigment_1.infra_libarrys.infra_classes.Agent.HumanAgent import HumanAgent
+from Assigment_1.infra_libarrys.infra_classes.Agent.NormalAgent import NormalAgent
+from Assigment_1.infra_libarrys.consts_and_enums.parser_consts import ParserFlags
+from Assigment_1.infra_libarrys.infra_classes.Env import Env
 
 
 def get_flow_args(parser_dict):
@@ -18,7 +20,12 @@ def get_flow_args(parser_dict):
 
 
 def get_package_dict(parser_dict):
-    return {package.time_appearance: package for package in parser_dict[ParserFlags.P]}, {package.time_delivery + 1: package for package in parser_dict[ParserFlags.P]}
+    package_appear_dict = collections.defaultdict(list)
+    package_disappear_dict = collections.defaultdict(list)
+    for package in parser_dict[ParserFlags.P]:
+        package_appear_dict[package.time_appearance].append(package)
+        package_disappear_dict[package.time_delivery + 1].append(package)
+    return  package_appear_dict, package_disappear_dict
 
 
 def get_agents_list(parser_dict, env):

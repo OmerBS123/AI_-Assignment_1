@@ -26,3 +26,7 @@ class Node:
 
     def get_x_y_coordinate(self):
         return self.x, self.y
+
+    def is_node_destination(self, package):
+        node_x, node_y = self.get_x_y_coordinate()
+        return node_x == package.dest_pos_x and node_y == package.dest_pos_y

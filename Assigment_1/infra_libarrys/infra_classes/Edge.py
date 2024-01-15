@@ -1,4 +1,4 @@
-from infra_libarrys.consts_and_enums.EdgeConsts import DEFAULT_WEIGHT
+from Assigment_1.infra_libarrys.consts_and_enums.EdgeConsts import DEFAULT_WEIGHT
 
 
 class Edge:
@@ -12,3 +12,7 @@ class Edge:
 
     def get_neighbor_node(self, curr_node):
         return (self.nodes - {curr_node}).pop()
+
+    def remove_self_from_env(self):
+        for node in self.nodes:
+            node.remove_edge(edge=self)

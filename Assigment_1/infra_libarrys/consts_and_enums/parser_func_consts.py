@@ -1,4 +1,4 @@
-from infra_libarrys.infra_functions import parser_functions
+from Assigment_1.infra_libarrys.infra_functions import parser_functions
 
 
 class ParserFlag:
