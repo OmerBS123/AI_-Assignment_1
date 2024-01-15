@@ -2,6 +2,7 @@ import keyboard
 
 from Assigment_1.infra_libarrys.infra_classes.Agent.Agent import Agent
 from Assigment_1.infra_libarrys.consts_and_enums.agents_consts import AgentConsts
+from Assigment_1.infra_libarrys.consts_and_enums.gui_consts import GuiColorConsts
 from Assigment_1.infra_libarrys.consts_and_enums.keyboard_consts import KeyboardNameConsts
 from Assigment_1.infra_libarrys.consts_and_enums.agents_consts import AgentName
 
@@ -11,14 +12,16 @@ class HumanAgent(Agent):
         super().__init__(curr_node, env)
         self.agent_type = AgentName.HUMAN
         self.tag = AgentConsts.HUMAN_AGENT_FLAG
+        self.agent_color = GuiColorConsts.ORANGE
 
     def run_agent_step(self):
-        try_again = True
-        while try_again:
-            edge = self.get_edge_to_cross()
-            if edge is not None:
-                try_again = False
-                self.step_over_edge(edge)
+        pass
+        # try_again = True
+        # while try_again:
+        #     edge = self.get_edge_to_cross()
+        #     if edge is not None:
+        #         try_again = False
+        #         self.step_over_edge(edge)
 
     def get_edge_to_cross(self):
         print("Press where you want to go")

@@ -1,7 +1,7 @@
 import heapq
 
-from infra_libarrys.infra_classes.DistanceNodeWrapper import DistanceNodeWrapper
-from infra_libarrys.infra_classes.SearchAlgorithem.SearchAlgorithm import SearchAlgorithm
+from Assigment_1.infra_libarrys.infra_classes.DistanceNodeWrapper import DistanceNodeWrapper
+from Assigment_1.infra_libarrys.infra_classes.SearchAlgorithem.SearchAlgorithm import SearchAlgorithm
 
 
 class Dijkstra(SearchAlgorithm):
@@ -13,7 +13,7 @@ class Dijkstra(SearchAlgorithm):
         self.nodes_with_package = [node for node in self.env.nodes if node.package is not None]
 
     def run_search(self):
-        if not self.nodes_with_package:
+        if not self.nodes_with_package and self.destination_node is None:
             return None
 
         heapq.heappush(self.heap, DistanceNodeWrapper(0, self.start_node))
@@ -21,7 +21,8 @@ class Dijkstra(SearchAlgorithm):
         self.distances[self.start_node] = 0
 
         while self.heap:
-            current_distance, current_node = heapq.heappop(self.heap).pair
+            node_wrapper = heapq.heappop(self.heap)
+            current_distance, current_node = node_wrapper.distance, node_wrapper.node
 
             for edge in current_node.edges:
                 neighbor_node = edge.get_neighbor_node(current_node)
