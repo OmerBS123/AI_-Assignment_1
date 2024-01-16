@@ -1,6 +1,5 @@
 import tkinter as tk
 
-from Assigment_1.infra_libarrys.consts_and_enums.agents_consts import AgentName
 from Assigment_1.infra_libarrys.consts_and_enums.gui_consts import GuiSizeConsts, GuiColorConsts, GuiFontConsts
 
 
@@ -84,15 +83,18 @@ class GraphUI:
         for curr_agent in self.agents_list:
             if curr_agent.curr_crossing_edge is None:
                 x, y = curr_agent.curr_node.get_x_y_coordinate()
-                self.canvas.create_text(x * GuiSizeConsts.SCALE_SIZE + 10 + self.offset_x, y * GuiSizeConsts.SCALE_SIZE - 5 + self.offset_y, text=curr_agent.tag, fill=curr_agent.agent_color)  # Display agent's tag above it
-            # else:
-            #     node1, node2 = curr_agent.curr_crossing_edge.nodes
-            #     x1, y1 = node1.get_x_y_coordinate()
-            #     x2, y2 = node2.get_x_y_coordinate()  #
-            #     # self.canvas.create_line(x1 * GuiConsts.SCALE_SIZE + 10 + self.offset_x, y1 * GuiConsts.SCALE_SIZE + 10 + self.offset_y,
-            #     #                         x2 * GuiConsts.SCALE_SIZE + 10 + self.offset_x, y2 * GuiConsts.SCALE_SIZE + 10 + self.offset_y, fill=curr_agent.color)
-            #     # # Adjust the coordinates based on the offset
-            #     self.canvas.create_text((x1 + x2) * 15 + 10 + self.offset_x, (y1 + y2) * 15 + 5 + self.offset_y, text=curr_agent.tag, fill=curr_agent.agent_color)
+                self.canvas.create_text(x * GuiSizeConsts.SCALE_SIZE + 10 + self.offset_x, y * GuiSizeConsts.SCALE_SIZE - 5 + self.offset_y, text=curr_agent.tag, fill=curr_agent.agent_color, font=GuiFontConsts.EDGE_WEIGHT_FONT)  # Display agent's tag above it
+            else:
+                node1, node2 = curr_agent.curr_crossing_edge.nodes
+                x1, y1 = node1.get_x_y_coordinate()
+                x2, y2 = node2.get_x_y_coordinate()
+                mid_x = (x1 + x2) * 0.5 * GuiSizeConsts.SCALE_SIZE + self.offset_x + GuiSizeConsts.LINE_SIZE
+                mid_y = (y1 + y2) * 0.5 * GuiSizeConsts.SCALE_SIZE + self.offset_y + GuiSizeConsts.LINE_SIZE
+                self.canvas.create_text(mid_x + GuiSizeConsts.AGENT_OFFSET_ON_EDGE, mid_y, text=curr_agent.tag, fill=curr_agent.agent_color, font=GuiFontConsts.EDGE_WEIGHT_FONT)
+                # self.canvas.create_line(x1 * GuiConsts.SCALE_SIZE + 10 + self.offset_x, y1 * GuiConsts.SCALE_SIZE + 10 + self.offset_y,
+                #                         x2 * GuiConsts.SCALE_SIZE + 10 + self.offset_x, y2 * GuiConsts.SCALE_SIZE + 10 + self.offset_y, fill=curr_agent.color)
+                # # Adjust the coordinates based on the offset
+                # self.canvas.create_text((x1 + x2) * 15 + 10 + self.offset_x, (y1 + y2) * 15 + 5 + self.offset_y, text=curr_agent.tag, fill=curr_agent.agent_color)
 
     def update_timer_label(self, timer_label):
         current_time = timer_label

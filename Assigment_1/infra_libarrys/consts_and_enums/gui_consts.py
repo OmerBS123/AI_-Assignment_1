@@ -7,6 +7,7 @@ class GuiSizeConsts:
     DEFAULT_WIDTH = 800
     DEFAULT_HEIGHT = 600
     MESSAGE_ENTRY_WIDTH = 50
+    AGENT_OFFSET_ON_EDGE = 30
 
 
 class GuiColorConsts:

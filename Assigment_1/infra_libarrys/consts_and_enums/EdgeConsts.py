@@ -1,6 +1,6 @@
 from enum import Enum
 
-DEFAULT_WEIGHT = 1
+DEFAULT_WEIGHT = 10
 
 
 class BlockedEdgeConsts:
