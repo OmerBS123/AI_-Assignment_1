@@ -8,6 +8,7 @@ class GuiSizeConsts:
     DEFAULT_HEIGHT = 600
     MESSAGE_ENTRY_WIDTH = 50
     AGENT_OFFSET_ON_EDGE = 30
+    PACKAGE_SIZE = 30
 
 
 class GuiColorConsts:
@@ -27,3 +28,4 @@ class GuiFontConsts:
 
 class GuiImagePathConsts:
     PACKAGE = '/Users/omerbensalmon/Desktop/BGU/Semester_5/inroduction_to_AI/Home_Assigments/Assigment_1/support_files/gui_files/package_image.gif'
+    DELIVERY = '/Users/omerbensalmon/Desktop/BGU/Semester_5/inroduction_to_AI/Home_Assigments/Assigment_1/support_files/gui_files/delivery_image.gif'

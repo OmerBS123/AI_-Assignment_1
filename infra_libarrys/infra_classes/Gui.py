@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import PhotoImage
+from tkinter import Text, RIGHT, END, Y
 from PIL import Image, ImageTk
 
 from infra_libarrys.consts_and_enums.gui_consts import GuiSizeConsts, GuiColorConsts, GuiFontConsts, GuiImagePathConsts
@@ -17,12 +17,9 @@ class GraphUI:
         self.timer_label = tk.Label(self.root, text="Timer: 0")
         self.timer_label.pack(side=tk.TOP)
 
-        self.message_entry = tk.Entry(self.root, width=GuiSizeConsts.MESSAGE_ENTRY_WIDTH)
-        self.message_entry.pack(side=tk.BOTTOM)
-        self.message_entry.insert(0, "Type your message here")
-
-        self.message_button = tk.Button(self.root, text="Send Message", command=self.send_message)
-        self.message_button.pack(side=tk.BOTTOM)
+        self.scoreboard_text = Text(self.root, height=10, width=30, wrap="none")
+        self.scoreboard_text.pack(side=RIGHT, fill=Y)
+        self.scoreboard_text.insert(END, "Scoreboard:\n\n")
 
         self.offset_x = 0
         self.offset_y = 0
@@ -34,6 +31,7 @@ class GraphUI:
         self.timer = 0
 
         self.package_image = self.get_image_obj()
+        self.delivery_image = self.get_delivery_image()
 
     def set_flow(self, flow):
         self.flow = flow
@@ -43,6 +41,7 @@ class GraphUI:
         self.draw_graph()
         self.draw_agents()
         self.update_timer_label(timer_label=timer_label)
+        self.update_scoreboard()
         self.root.update_idletasks()
 
     def update_offsets(self):
@@ -67,9 +66,16 @@ class GraphUI:
         for x in range(self.env.width + 1):
             for y in range(self.env.height + 1):
                 node = self.env.graph[x][y]
-                node_fill = GuiColorConsts.PINK if node.package is not None else GuiColorConsts.BLUE
-                self.canvas.create_oval(x * GuiSizeConsts.SCALE_SIZE + self.offset_x, y * GuiSizeConsts.SCALE_SIZE + self.offset_y, x * GuiSizeConsts.SCALE_SIZE + GuiSizeConsts.OVAL_SIZE + self.offset_x,
-                                        y * GuiSizeConsts.SCALE_SIZE + GuiSizeConsts.OVAL_SIZE + self.offset_y, fill=node_fill)  # Node representation
+                if node.package is None:
+                    self.canvas.create_oval(x * GuiSizeConsts.SCALE_SIZE + self.offset_x, y * GuiSizeConsts.SCALE_SIZE + self.offset_y, x * GuiSizeConsts.SCALE_SIZE + GuiSizeConsts.OVAL_SIZE + self.offset_x,
+                                            y * GuiSizeConsts.SCALE_SIZE + GuiSizeConsts.OVAL_SIZE + self.offset_y, fill=GuiColorConsts.BLUE)
+                else:
+                    self.canvas.create_oval(x * GuiSizeConsts.SCALE_SIZE + self.offset_x, y * GuiSizeConsts.SCALE_SIZE + self.offset_y, x * GuiSizeConsts.SCALE_SIZE + GuiSizeConsts.OVAL_SIZE + self.offset_x,
+                                            y * GuiSizeConsts.SCALE_SIZE + GuiSizeConsts.OVAL_SIZE + self.offset_y, fill=GuiColorConsts.PINK)
+                    self.canvas.create_image(x * GuiSizeConsts.SCALE_SIZE + self.offset_x + 30,
+                                             y * GuiSizeConsts.SCALE_SIZE + self.offset_y + 30,
+                                             anchor='center',
+                                             image=self.package_image)
 
                 for edge in node.edges:
                     if edge in drawn_edges:
@@ -80,8 +86,10 @@ class GraphUI:
                     x2, y2 = node2.get_x_y_coordinate()
                     mid_x = (x1 + x2) * 0.5 * GuiSizeConsts.SCALE_SIZE + self.offset_x + GuiSizeConsts.LINE_SIZE
                     mid_y = (y1 + y2) * 0.5 * GuiSizeConsts.SCALE_SIZE + self.offset_y + GuiSizeConsts.LINE_SIZE
+                    edge_fill = GuiColorConsts.RED if edge.is_fragile else GuiColorConsts.BLACK
+                    line_width = 2 if edge.is_fragile else 1
                     self.canvas.create_line(x1 * GuiSizeConsts.SCALE_SIZE + GuiSizeConsts.LINE_SIZE + self.offset_x, y1 * GuiSizeConsts.SCALE_SIZE + GuiSizeConsts.LINE_SIZE + self.offset_y,
-                                            x2 * GuiSizeConsts.SCALE_SIZE + GuiSizeConsts.LINE_SIZE + self.offset_x, y2 * GuiSizeConsts.SCALE_SIZE + GuiSizeConsts.LINE_SIZE + self.offset_y, fill=GuiColorConsts.BLACK)
+                                            x2 * GuiSizeConsts.SCALE_SIZE + GuiSizeConsts.LINE_SIZE + self.offset_x, y2 * GuiSizeConsts.SCALE_SIZE + GuiSizeConsts.LINE_SIZE + self.offset_y, fill=edge_fill, width=line_width)
                     self.canvas.create_text(mid_x, mid_y, text=f"{edge.weight}", fill=GuiColorConsts.GREY, font=GuiFontConsts.EDGE_WEIGHT_FONT)
 
     def draw_agents(self):
@@ -104,21 +112,21 @@ class GraphUI:
                 self.canvas.create_text(agent_ui_pos_x, agent_ui_pos_y, text=curr_agent.tag, fill=curr_agent.agent_color, font=GuiFontConsts.EDGE_WEIGHT_FONT)
 
             if curr_agent.package is not None:
-                # Assuming your package image is square, adjust the size as needed
-                image_size = 30
                 self.canvas.create_image(agent_ui_pos_x + 30,
                                          agent_ui_pos_y + 30,
                                          anchor='center',
                                          image=self.package_image)
 
+                delivery_pos_x, delivery_pos_y = curr_agent.package.get_delivery_x_y()
+                x, y = delivery_pos_x * GuiSizeConsts.SCALE_SIZE + self.offset_x, delivery_pos_y * GuiSizeConsts.SCALE_SIZE + self.offset_y
+                self.canvas.create_image(x,
+                                         y,
+                                         anchor='center',
+                                         image=self.delivery_image)
+
     def update_timer_label(self, timer_label):
         current_time = timer_label
         self.timer_label.config(text=f"Timer: {current_time}")
-
-    def send_message(self):
-        message = self.message_entry.get()
-        # Handle the message (e.g., display it in the UI or send it to agents)
-        print(f"Message: {message}")
 
     def check_close_flag(self):
         if self.should_close:
@@ -133,13 +141,31 @@ class GraphUI:
     def update_timer(self, new_time):
         self.timer = new_time
 
+    def update_scoreboard(self):
+        self.scoreboard_text.delete("1.0", END)  # Clear the current scoreboard content
+        self.scoreboard_text.insert(END, "Scoreboard:\n\n")
+        for agent in self.agents_list:
+            self.scoreboard_text.insert(END, f"{agent.tag}: {agent.score}\n")
+        self.scoreboard_text.update_idletasks()
+
     @staticmethod
     def get_image_obj():
         package_image_path = GuiImagePathConsts.PACKAGE
 
         # Open and resize the image using Pillow
         original_image = Image.open(package_image_path)
-        resized_image = original_image.resize((30 * 2, 30 * 2), Image.ANTIALIAS)
+        resized_image = original_image.resize((GuiSizeConsts.PACKAGE_SIZE, GuiSizeConsts.PACKAGE_SIZE), Image.LANCZOS)
+
+        # Convert the resized image to a Tkinter PhotoImage
+        return ImageTk.PhotoImage(resized_image)
+
+    @staticmethod
+    def get_delivery_image():
+        delivery_image_path = GuiImagePathConsts.DELIVERY
+
+        # Open and resize the image using Pillow
+        original_image = Image.open(delivery_image_path)
+        resized_image = original_image.resize((GuiSizeConsts.PACKAGE_SIZE, GuiSizeConsts.PACKAGE_SIZE), Image.LANCZOS)
 
         # Convert the resized image to a Tkinter PhotoImage
         return ImageTk.PhotoImage(resized_image)
