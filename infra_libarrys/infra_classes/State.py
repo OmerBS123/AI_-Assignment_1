@@ -32,9 +32,9 @@ class State:
 
     def update_state(self, old_edge):
         self.update_agent(old_edge)
-        state_edge = self.get_edge_from_old_edge(old_edge)
+        move_edge = self.get_edge_from_old_edge(old_edge)
 
-        if state_edge.is_fragile:
-            state_edge.remove_self_from_env()
+        if move_edge.is_fragile:
+            move_edge.remove_self_from_env()
 
 

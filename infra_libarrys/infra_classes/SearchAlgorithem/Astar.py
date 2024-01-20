@@ -17,10 +17,13 @@ class Astar(SearchAlgorithm):
             if curr_node.state.is_goal():
                 return curr_node
             same_state_node = self.get_same_state_node(curr_node)
-            if same_state_node is not None and curr_node.calculate_f() < same_state_node.calculate_f():
-                self.closed_nodes.remove(same_state_node)
+            if same_state_node is None or curr_node.calculate_f() < same_state_node.calculate_f():
+                if same_state_node is not None:
+                    self.closed_nodes.remove(same_state_node)
                 self.closed_nodes.add(curr_node)
-                # TODO: expand and add nodes
+                new_node_list = curr_node.expand()
+                for new_node in new_node_list:
+                    heapq.heappush(self.open_nodes, new_node)
 
     def get_same_state_node(self, node):
         state_singleton = {node.state == curr_node.state for curr_node in self.closed_nodes}
