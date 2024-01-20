@@ -7,6 +7,9 @@ class Edge:
         self.is_fragile = is_fragile
         self.weight = weight
 
+    def __eq__(self, other):
+        return self.nodes == other.nodes
+
     def add_nodes(self, node1, node2):
         self.nodes = {node1, node2}
 
