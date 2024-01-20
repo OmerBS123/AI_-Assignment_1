@@ -6,6 +6,9 @@ class Node:
         self.edges = set()
         self.agent = agent
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
     def add_edge(self, edge):
         self.edges.add(edge)
 
