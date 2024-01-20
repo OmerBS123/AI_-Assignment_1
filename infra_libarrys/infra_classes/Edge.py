@@ -27,3 +27,9 @@ class Edge:
         switched_coordinate_tuple = (coordinate_tuple[2], coordinate_tuple[3], coordinate_tuple[0], coordinate_tuple[1])
         env.fragile_edges = env.fragile_edges - {coordinate_tuple, switched_coordinate_tuple}
         env.blocked_edges |= coordinate_tuple
+
+    def get_edge_coordinate(self):
+        node1, node2 = self.nodes
+        x1, y1 = node1.get_x_y_coordinate()
+        x2, y2 = node2.get_x_y_coordinate()
+        return x1, y1, x2, y2
