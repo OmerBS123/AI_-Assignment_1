@@ -23,3 +23,6 @@ class Package:
 
     def get_delivery_x_y(self):
         return self.dest_pos_x, self.dest_pos_y
+
+    def get_pos_x_y(self):
+        return self.pos_x, self.pos_y
