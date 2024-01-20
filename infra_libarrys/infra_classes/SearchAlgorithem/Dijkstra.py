@@ -1,6 +1,6 @@
 import heapq
 
-from infra_libarrys.infra_classes.DistanceNodeWrapper import DistanceNodeWrapper
+from infra_libarrys.infra_classes.Wrappers.DistanceNodeWrapper import DistanceNodeWrapper
 from infra_libarrys.infra_classes.SearchAlgorithem.SearchAlgorithm import SearchAlgorithm
 
 
