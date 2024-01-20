@@ -11,6 +11,9 @@ class Env:
         self.edges_dict = {}
         self.blocked_edges = blocked_edges
         self.fragile_edges = fragile_edges
+        self.package_points = {node for node in self.nodes if node.package is not None}
+        self.package_points = self.get_delivery_nodes()
+        self.agent_nodes = {node for node in self.nodes if node.agent is not None}
         self.create_all_edges()
 
     def create_all_edges(self):
