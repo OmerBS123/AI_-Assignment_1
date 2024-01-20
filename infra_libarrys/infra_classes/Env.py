@@ -1,5 +1,9 @@
+from itertools import combinations
+
+from infra_libarrys.infra_classes.Clique import Clique
 from infra_libarrys.infra_classes.Node import Node
 from infra_libarrys.infra_classes.Edge import Edge
+from infra_libarrys.infra_classes.SearchAlgorithem.Dijkstra import Dijkstra
 
 
 class Env:
@@ -65,3 +69,30 @@ class Env:
         x1, y1 = node_1.get_x_y_coordinate()
         x2, y2 = node_2.get_x_y_coordinate()
         return next(self.edges_dict[edge] for edge in self.edges_dict if (x1, y1, x2, y2) == edge or (x2, y2, x1, y1) == edge)
+
+    def create_clique(self):
+        clique = Clique()
+
+        # Create a copy of the nodes and edges from the original graph
+        node_set = self.package_points | self.delivery_points | self.agent_nodes
+
+        distance_dict = {}
+
+        # Add nodes to the clique
+        for node in node_set:
+            clique.add_node(node)
+
+        # Add edges based on the shortest paths
+        for node1, node2 in combinations(node_set, 2):
+            if node1 in self.agent_nodes and node2 in self.agent_nodes:
+                continue
+
+            if node1 not in distance_dict:
+                dijkstra_algo = Dijkstra(start_node=node1, env=self, destination_node=node2)
+                _, distances = dijkstra_algo.run_search()
+                distance_dict[node1] = distances
+
+            distances = distance_dict[node1]
+            clique.add_edge(node1, node2, distances[node1])
+
+        return clique
