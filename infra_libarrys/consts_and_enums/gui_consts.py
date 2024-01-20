@@ -20,6 +20,7 @@ class GuiColorConsts:
     ORANGE = "orange"
     GREY = "grey"
     PINK = "pink"
+    SILVER = 'silver'
 
 
 class GuiFontConsts:
