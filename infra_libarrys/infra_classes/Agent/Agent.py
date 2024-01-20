@@ -9,6 +9,16 @@ class Agent:
         self.agent_color = None
         self.score = 0
 
+    def __copy__(self):
+        new_agent = Agent(self.curr_node, self.env)
+        new_agent.package = self.package
+        new_agent.time_left_to_cross_edge = self.time_left_to_cross_edge
+        new_agent.curr_crossing_edge = self.curr_crossing_edge
+        new_agent.agent_type = self.agent_type
+        new_agent.agent_color = self.agent_color
+        new_agent.score = self.score
+        return new_agent
+
     def remove_package(self):
         self.package = None
 

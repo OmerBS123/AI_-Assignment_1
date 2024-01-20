@@ -8,6 +8,9 @@ class Package:
         self.time_delivery = time_delivery
         self.agent = None
 
+    def __copy__(self):
+        return Package(self.pos_x, self.pos_y, self.dest_pos_x, self.dest_pos_y, self.time_appearance, self.time_delivery)
+
     def remove_self_from_env(self, env):
         if self.agent:
             self.agent.remove_package()

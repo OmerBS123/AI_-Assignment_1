@@ -17,10 +17,13 @@ class Edge:
         return (self.nodes - {curr_node}).pop()
 
     def remove_self_from_env(self, env):
+        coordinate_tuple = []
         for node in self.nodes:
             node.remove_edge(edge=self)
-        coordinate_tuple = [curr_node.get_x_y_coordinate for curr_node in self.nodes]
+            x, y = node.get_x_y_coordinate()
+            coordinate_tuple.extend([x, y])
+
         coordinate_tuple = tuple(coordinate_tuple)
         switched_coordinate_tuple = (coordinate_tuple[2], coordinate_tuple[3], coordinate_tuple[0], coordinate_tuple[1])
         env.fragile_edges = env.fragile_edges - {coordinate_tuple, switched_coordinate_tuple}
-        env.blocked_edges.add(coordinate_tuple)
+        env.blocked_edges |= coordinate_tuple

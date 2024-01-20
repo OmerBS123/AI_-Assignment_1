@@ -1,4 +1,5 @@
 from itertools import combinations
+from copy import copy
 
 from infra_libarrys.infra_classes.Clique import Clique
 from infra_libarrys.infra_classes.Node import Node
@@ -7,7 +8,7 @@ from infra_libarrys.infra_classes.SearchAlgorithem.Dijkstra import Dijkstra
 
 
 class Env:
-    def __init__(self, width, height, blocked_edges=None, fragile_edges=None):
+    def __init__(self, width, height, blocked_edges=None, fragile_edges=None, package_appear_dict=None, package_disappear_dict=None):
         self.width = width
         self.height = height
         self.graph = [[Node(x, y) for y in range(height + 1)] for x in range(width + 1)]
@@ -19,11 +20,32 @@ class Env:
         self.agent_nodes = {node for node in self.nodes if node.agent is not None}
         self.delivery_points = self.get_delivery_nodes()
         self.create_all_edges()
+        self.package_appear_dict = package_appear_dict
+        self.package_disappear_dict = package_disappear_dict
 
     def __copy__(self):
         copy_env = Env(self.width, self.height, self.blocked_edges, self.fragile_edges)
+
         package_coordinate = {node.get_x_y_coordinate() for node in self.package_points}
-        copy_env.package_points = [copy_env.graph[x][y] for x, y in package_coordinate]
+        copy_env.package_points = {copy_env.graph[x][y] for x, y in package_coordinate}
+        for package_node in self.package_points:
+            x, y = package_node.get_x_y_coordinate()
+            copy_env.graph[x][y].add_package(copy(package_node.package))
+
+        delivery_coordinates = {node.get_x_y_coordinate() for node in self.delivery_points}
+        copy_env.delivery_points = {copy_env.graph[x][y] for x, y in delivery_coordinates}
+
+        agent_node_coordinate = {node.get_x_y_coordinate() for node in self.agent_nodes}
+        copy_env.agent_nodes = {copy_env.graph[x][y] for x, y in agent_node_coordinate}
+        for agent_node in self.agent_nodes:
+            x, y = agent_node.get_x_y_coordinate()
+            copy_env.graph[x][y].agent = copy(agent_node.agent)
+
+        #TODO:make copy for apear_dict
+        for package_appear_time, package_list in self.package_appear_dict:
+            new_package_list = [copy(curr_package) for curr_package in package_list]
+
+        return copy_env
 
     def __eq__(self, other):
         cond1 = self.package_points == other.package_points

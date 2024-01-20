@@ -1,3 +1,6 @@
+from copy import copy
+
+
 class AstarNodeWrapper:
     def __init__(self, state, parent_node, g, h, prev_action):
         self.state = state
@@ -19,3 +22,8 @@ class AstarNodeWrapper:
             parent_node = self
 
     def create_state_from_edge(self, edge):
+        copy_env = copy(self.state.env)
+        new_time = self.state.time + edge.weight
+
+
+
