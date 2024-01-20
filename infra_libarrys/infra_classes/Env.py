@@ -16,10 +16,14 @@ class Env:
         self.blocked_edges = blocked_edges
         self.fragile_edges = fragile_edges
         self.package_points = {node for node in self.nodes if node.package is not None}
-        self.package_points = self.get_delivery_nodes()
         self.agent_nodes = {node for node in self.nodes if node.agent is not None}
         self.delivery_points = self.get_delivery_nodes()
         self.create_all_edges()
+
+    def __copy__(self):
+        copy_env = Env(self.width, self.height, self.blocked_edges, self.fragile_edges)
+        package_coordinate = {node.get_x_y_coordinate() for node in self.package_points}
+        copy_env.package_points = [copy_env.graph[x][y] for x, y in package_coordinate]
 
     def __eq__(self, other):
         cond1 = self.package_points == other.package_points
