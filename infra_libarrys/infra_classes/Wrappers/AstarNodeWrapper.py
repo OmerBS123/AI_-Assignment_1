@@ -1,4 +1,3 @@
-import heapq
 from copy import copy
 
 from infra_libarrys.infra_classes.Mst import Mst
@@ -6,7 +5,7 @@ from infra_libarrys.infra_classes.State import State
 
 
 class AstarNodeWrapper:
-    def __init__(self, state, parent_node, g, h, prev_action):
+    def __init__(self, state, parent_node, g, h, prev_action=None):
         self.state = state
         self.parent_node = parent_node
         self.g = g
@@ -26,7 +25,7 @@ class AstarNodeWrapper:
             g = self.g + curr_edge.weight
             parent_node = self
             new_state = self.create_state_from_edge(curr_edge)
-            previous_action = curr_edge
+            previous_action = curr_edge.get_edge_coordinate()
             h = self.get_h_for_state(new_state)
             new_node = AstarNodeWrapper(state=new_state, parent_node=parent_node, g=g, prev_action=previous_action, h=h)
             new_node_list.append(new_node)
@@ -46,3 +45,13 @@ class AstarNodeWrapper:
         mst = Mst(clique)
         mst.create_mst()
         return mst.get_mst_weight()
+
+    def get_actions_path(self):
+        return self.get_actions_path_helper(self, [])
+
+    @staticmethod
+    def get_actions_path_helper(state, path_acc):
+        if state.prev_action is not None:
+            path_acc.append(state.prev_action)
+            state.get_actions_path_helper(state.parent_node, path_acc)
+        return path_acc
