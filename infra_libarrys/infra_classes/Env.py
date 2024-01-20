@@ -14,7 +14,18 @@ class Env:
         self.package_points = {node for node in self.nodes if node.package is not None}
         self.package_points = self.get_delivery_nodes()
         self.agent_nodes = {node for node in self.nodes if node.agent is not None}
+        self.delivery_points = self.get_delivery_nodes()
         self.create_all_edges()
+
+    def __eq__(self, other):
+        cond1 = self.package_points == other.package_points
+        cond2 = self.delivery_points == other.delivrey_points
+        cond3 = self.fragile_edges == other.fragile_edges
+        return cond1 and cond2 and cond3
+
+    def get_delivery_nodes(self):
+        set_pos_x_y = {node.package.get_delivery_x_y() for node in self.package_points}
+        return {self.graph[x][y] for x, y in set_pos_x_y}
 
     def create_all_edges(self):
         for x in range(self.width + 1):
