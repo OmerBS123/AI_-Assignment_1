@@ -38,7 +38,7 @@ class Dijkstra(SearchAlgorithm):
 
         shortest_path = self.get_shortest_path()
 
-        return shortest_path
+        return shortest_path, self.distances
 
     def get_min_distance_package_node(self):
         return min(self.nodes_with_package, key=lambda node: self.distances[node])
