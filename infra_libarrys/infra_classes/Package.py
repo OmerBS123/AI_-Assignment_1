@@ -13,7 +13,7 @@ class Package:
 
     def remove_self_from_env(self, env):
         if self.agent:
-            self.agent.remove_package()
+            self.agent.remove_package(self)
             self.agent = None
         else:
             env[self.pos_x][self.pos_y].remove_package()

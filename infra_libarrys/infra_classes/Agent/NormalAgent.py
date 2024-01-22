@@ -40,9 +40,8 @@ class NormalAgent(Agent):
         return node
 
     def get_search_algo(self):
-        if self.package is not None:
-            destination_node = self.env.graph[self.package.dest_pos_x][self.package.dest_pos_y]
-            dijkstra_algo = Dijkstra(start_node=self.curr_node, env=self.env, destination_node=destination_node)
+        if self.packages:
+            dijkstra_algo = Dijkstra(start_node=self.curr_node, env=self.env, agent_packages=self.packages)
         else:
             dijkstra_algo = Dijkstra(start_node=self.curr_node, env=self.env)
         return dijkstra_algo
@@ -60,12 +59,13 @@ class NormalAgent(Agent):
 
     def pickup_package_if_exists(self):
         if self.curr_node.package is not None:
-            self.package = self.curr_node.package
+            x, y = self.curr_node.get_x_y_coordinate()
+            self.packages[(x, y)] = self.curr_node.package
             self.curr_node.remove_package()
 
     def drop_package_if_possible(self):
-        if self.package is None:
+        if not self.packages:
             return
-        if self.curr_node.is_node_destination(self.package):
-            self.package = None
+        package = self.curr_node.is_node_destination(self.package)
+        if package is not None:
             self.score += 1

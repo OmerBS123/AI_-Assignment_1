@@ -2,7 +2,7 @@ class Agent:
     def __init__(self, curr_node, env):
         self.env = env
         self.curr_node = curr_node
-        self.package = None
+        self.packages = {}
         self.time_left_to_cross_edge = 0
         self.curr_crossing_edge = None
         self.agent_type = None
@@ -11,7 +11,7 @@ class Agent:
 
     def __copy__(self):
         new_agent = Agent(self.curr_node, self.env)
-        new_agent.package = self.package
+        new_agent.packages = self.packages
         new_agent.time_left_to_cross_edge = self.time_left_to_cross_edge
         new_agent.curr_crossing_edge = self.curr_crossing_edge
         new_agent.agent_type = self.agent_type
@@ -19,8 +19,8 @@ class Agent:
         new_agent.score = self.score
         return new_agent
 
-    def remove_package(self):
-        self.package = None
+    def remove_package(self, package):
+        self.packages.remove(package)
 
     def run_agent_step(self):
         pass

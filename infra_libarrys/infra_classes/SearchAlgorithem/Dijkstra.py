@@ -5,12 +5,14 @@ from infra_libarrys.infra_classes.SearchAlgorithem.SearchAlgorithm import Search
 
 
 class Dijkstra(SearchAlgorithm):
-    def __init__(self, start_node, env, destination_node=None):
+    def __init__(self, start_node, env, destination_node=None, agent_packages=None):
         super().__init__(start_node, env, destination_node=destination_node)
         self.distances = {node: float('inf') for node in self.env.nodes}
         self.previous = {node: None for node in self.env.nodes}
         self.heap = []
         self.nodes_with_package = [node for node in self.env.nodes if node.package is not None]
+        delivery_point_coordinate = [package.get_delivery_x_y() for package in agent_packages]
+        self.delivery_point_nodes = [self.env.graph[x][y] for x, y in delivery_point_coordinate]
 
     def run_search(self):
         if not self.nodes_with_package and self.destination_node is None:
@@ -41,7 +43,8 @@ class Dijkstra(SearchAlgorithm):
         return shortest_path, self.distances
 
     def get_min_distance_package_node(self):
-        return min(self.nodes_with_package, key=lambda node: self.distances[node])
+        all_destinations = self.nodes_with_package + self.delivery_point_nodes
+        return min(all_destinations, key=lambda node: self.distances[node])
 
     def get_shortest_path(self):
         path = []

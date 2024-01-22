@@ -30,6 +30,6 @@ class Node:
     def get_x_y_coordinate(self):
         return self.x, self.y
 
-    def is_node_destination(self, package):
+    def is_node_destination(self, packages):
         node_x, node_y = self.get_x_y_coordinate()
-        return node_x == package.dest_pos_x and node_y == package.dest_pos_y
+        return packages.pop((node_x, node_y), None)
