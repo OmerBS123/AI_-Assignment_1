@@ -11,11 +11,10 @@ from infra_libarrys.infra_classes.Gui import GraphUI
 def main():
     config_path = "/Users/omerbensalmon/Desktop/BGU/Semester_5/inroduction_to_AI/Home_Assigments/Assigment_1/support_files/config.txt"
     parser_dict = parse_args(config_path)
-    env, agents_list, package_appear_dict, package_disappear_dict = get_flow_args(parser_dict)
-    env.set_package_appear_dict(package_appear_dict)
-    env.set_package_disappear_dict(package_disappear_dict)
-    copy_of_env = copy.copy(env)
+    env, agents_list = get_flow_args(parser_dict)
 
+    env.update_packages_state_if_needed(0)
+    copy_of_env = copy.copy(env)
 
     astar_agent = AstarAgent(env=env, curr_node=env.graph[0][0])
 

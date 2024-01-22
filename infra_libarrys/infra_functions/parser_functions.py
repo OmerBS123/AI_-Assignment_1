@@ -15,8 +15,9 @@ from infra_libarrys.infra_classes.Env import Env
 def get_flow_args(parser_dict):
     env = get_env(parser_dict)
     agents_list = get_agents_list(parser_dict, env)
-    package_appear_dict, package_disappear_dict = get_package_dict(parser_dict)
-    return env, agents_list, package_appear_dict, package_disappear_dict
+    env.update_agents_list(agents_list)
+
+    return env, agents_list
 
 
 def get_package_dict(parser_dict):
@@ -43,11 +44,12 @@ def get_agents_list(parser_dict, env):
 
 
 def get_env(parser_dict):
+    package_appear_dict, package_disappear_dict = get_package_dict(parser_dict)
     x = parser_dict[ParserFlags.X][0]
     y = parser_dict[ParserFlags.Y][0]
     blocked_edges = set(parser_dict[ParserFlags.B])
     fragile_edges = set(parser_dict[ParserFlags.F])
-    env = Env(x, y, blocked_edges=blocked_edges, fragile_edges=fragile_edges)
+    env = Env(x, y, blocked_edges=blocked_edges, fragile_edges=fragile_edges, package_appear_dict=package_appear_dict, package_disappear_dict=package_disappear_dict)
     return env
 
 

@@ -3,6 +3,7 @@ class State:
         self.env = env
         self.curr_node = curr_node
         self.time = time
+        self.env.update_packages_state_if_needed(self.time)
 
     def __eq__(self, other):
         return self.env == other.env and self.curr_node == other.curr_node

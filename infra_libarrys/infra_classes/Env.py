@@ -1,6 +1,7 @@
 from itertools import combinations
 from copy import copy
 
+from infra_libarrys.infra_classes.Agent.Agent import Agent
 from infra_libarrys.infra_classes.Clique import Clique
 from infra_libarrys.infra_classes.Node import Node
 from infra_libarrys.infra_classes.Edge import Edge
@@ -8,7 +9,9 @@ from infra_libarrys.infra_classes.SearchAlgorithem.Dijkstra import Dijkstra
 
 
 class Env:
-    def __init__(self, width, height, blocked_edges=None, fragile_edges=None, package_appear_dict=None, package_disappear_dict=None):
+    def __init__(self, width, height, blocked_edges=None, fragile_edges=None, package_appear_dict=None, package_disappear_dict=None, start_time=0):
+        self.package_appear_dict = package_appear_dict
+        self.package_disappear_dict = package_disappear_dict
         self.width = width
         self.height = height
         self.graph = [[Node(x, y) for y in range(height + 1)] for x in range(width + 1)]
@@ -16,27 +19,27 @@ class Env:
         self.edges_dict = {}
         self.blocked_edges = blocked_edges
         self.fragile_edges = fragile_edges
+        self.update_packages_state_if_needed(start_time)
         self.package_points = {node for node in self.nodes if node.package is not None}
         self.agent_nodes = {node for node in self.nodes if node.agent is not None}
         self.delivery_points = self.get_delivery_nodes()
         self.create_all_edges()
-        self.package_appear_dict = package_appear_dict
-        self.package_disappear_dict = package_disappear_dict
 
     def __copy__(self):
         copy_env = Env(self.width, self.height, self.blocked_edges, self.fragile_edges)
 
-        package_created = set()
-        self.copy_packages(copy_env, package_created)
+        old_package_created = set()
+        copy_package_created = set()
+        self.copy_packages(copy_env, old_package_created, copy_package_created)
 
-        self.copy_package_appear_dict(copy_env, package_created)
+        self.copy_package_appear_dict(copy_env, old_package_created, copy_package_created)
 
-        self.copy_package_disappear_dict(copy_env)
+        self.copy_package_disappear_dict(copy_env, copy_package_created)
 
         delivery_coordinates = {node.get_x_y_coordinate() for node in self.delivery_points}
         copy_env.delivery_points = {copy_env.graph[x][y] for x, y in delivery_coordinates}
 
-        self.copy_agents(copy_env)
+        self.copy_agents(copy_env, copy_package_created)
 
         return copy_env
 
@@ -46,36 +49,36 @@ class Env:
         cond3 = self.fragile_edges == other.fragile_edges
         return cond1 and cond2 and cond3
 
-    def copy_packages(self, copy_env, package_created):
+    def copy_packages(self, copy_env, old_package_created, copy_package_created):
         package_coordinate = {node.get_x_y_coordinate() for node in self.package_points}
         copy_env.package_points = {copy_env.graph[x][y] for x, y in package_coordinate}
         for package_node in self.package_points:
             x, y = package_node.get_x_y_coordinate()
-            copy_env.graph[x][y].add_package(copy(package_node.package))
-            package_created.add(package_node.package)
+            package_copy = copy(package_node.package)
+            copy_env.graph[x][y].add_package(package_copy)
+            old_package_created.add(package_node.package)
+            copy_package_created.add(package_copy)
 
-    def copy_package_appear_dict(self, copy_env, package_created):
+    def copy_package_appear_dict(self, copy_env, old_packages_created, copy_package_created):
         package_appear_dict_copy = {}
-        for package_appear_time, package_list in self.package_appear_dict:
-            new_package_list = [copy(curr_package) for curr_package in package_list if curr_package not in package_created]
-            package_created.update(new_package_list)
+        for package_appear_time, package_list in self.package_appear_dict.items():
+            new_package_list = [copy(curr_package) for curr_package in package_list if curr_package not in old_packages_created]
+            copy_package_created.update(new_package_list)
             package_appear_dict_copy[package_appear_time] = new_package_list
         copy_env.package_appear_dict = package_appear_dict_copy
 
-    def copy_package_disappear_dict(self, copy_env):
+    def copy_package_disappear_dict(self, copy_env, copy_package_created):
         package_disappear_dict_copy = {}
         for package_disappear_time, package_list in self.package_disappear_dict.items():
-            new_package_list_coordinate = [curr_package.get_pos_x_y() for curr_package in package_list]
-            new_package_list = [copy_env.graph[x][y].package for x, y in new_package_list_coordinate]
-            package_disappear_dict_copy[package_disappear_time] = new_package_list
+            package_disappear_dict_copy[package_disappear_time] = [package for package in copy_package_created if package.time_delivery + 1 == package_disappear_time]
         copy_env.package_disappear_dict = package_disappear_dict_copy
 
-    def copy_agents(self, copy_env):
+    def copy_agents(self, copy_env, copy_package_created):
         agent_node_coordinate = {node.get_x_y_coordinate() for node in self.agent_nodes}
         copy_env.agent_nodes = {copy_env.graph[x][y] for x, y in agent_node_coordinate}
         for agent_node in self.agent_nodes:
             x, y = agent_node.get_x_y_coordinate()
-            copy_env.graph[x][y].agent = copy(agent_node.agent)
+            copy_env.graph[x][y].agent = Agent.copy_with_packages(agent_node.agent, copy_package_created, copy_env)
 
     def get_delivery_nodes(self):
         set_pos_x_y = {node.package.get_delivery_x_y() for node in self.package_points}
@@ -152,3 +155,15 @@ class Env:
 
     def set_package_disappear_dict(self, package_disappear_dict):
         self.package_disappear_dict = package_disappear_dict
+
+    def update_packages_state_if_needed(self, timer):
+        if self.package_appear_dict is not None and timer in self.package_appear_dict:
+            for curr_new_package in self.package_appear_dict[timer]:
+                self.graph[curr_new_package.pos_x][curr_new_package.pos_y].add_package(curr_new_package)
+
+        if self.package_disappear_dict is not None and timer in self.package_disappear_dict:
+            for curr_package in self.package_disappear_dict[timer]:
+                curr_package.remove_self_from_env(self)
+
+    def update_agents_list(self, agent_list):
+        self.agent_nodes = [agent.curr_node for agent in agent_list]

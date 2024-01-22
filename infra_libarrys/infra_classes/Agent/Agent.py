@@ -4,7 +4,8 @@ import copy
 class Agent:
     def __init__(self, curr_node, env):
         self.env = env
-        self.curr_node = curr_node
+        self.curr_node = None
+        self.put_self_on_node(curr_node)
         self.packages = {}
         self.time_left_to_cross_edge = 0
         self.curr_crossing_edge = None
@@ -12,14 +13,18 @@ class Agent:
         self.agent_color = None
         self.score = 0
 
-    def __copy__(self):
-        new_agent = Agent(self.curr_node, self.env)
-        new_agent.packages = {copy.copy(package) for package in self.packages}
-        new_agent.time_left_to_cross_edge = self.time_left_to_cross_edge
+    @classmethod
+    def copy_with_packages(cls, original_agent, created_packages, new_env):
+        x, y = original_agent.curr_node.get_x_y_coordinate()
+        new_curr_node = new_env.graph[x][y]
+        new_agent = cls(new_curr_node, new_env)
+        old_agent_package_coordinate = {(package.pos_x, package.pos_y) for package in original_agent.packages}
+        new_agent.packages = {package for package in created_packages if (package.pos_x, package.pos_y) in old_agent_package_coordinate}
+        new_agent.time_left_to_cross_edge = original_agent.time_left_to_cross_edge
         new_agent.curr_crossing_edge = None
-        new_agent.agent_type = self.agent_type
-        new_agent.agent_color = self.agent_color
-        new_agent.score = self.score
+        new_agent.agent_type = original_agent.agent_type
+        new_agent.agent_color = original_agent.agent_color
+        new_agent.score = original_agent.score
         return new_agent
 
     def remove_package(self, package):
@@ -37,7 +42,8 @@ class Agent:
         if self.time_left_to_cross_edge > 0:
             self.time_left_to_cross_edge -= 1
             if self.time_left_to_cross_edge == 0:
-                self.curr_node = self.curr_crossing_edge.get_neighbor_node(self.curr_node)
+                next_node = self.curr_crossing_edge.get_neighbor_node(self.curr_node)
+                self.put_self_on_node(next_node)
                 if self.curr_crossing_edge.is_fragile:
                     self.curr_crossing_edge.remove_self_from_env(env=self.env)
                 self.curr_crossing_edge = None
@@ -50,3 +56,9 @@ class Agent:
         package = self.curr_node.is_node_destination(self.packages)
         if package is not None:
             self.score += 1
+
+    def put_self_on_node(self, new_curr_node):
+        new_curr_node.agent = self
+        if self.curr_node is not None:
+            self.curr_node.agent = None
+        self.curr_node = new_curr_node
