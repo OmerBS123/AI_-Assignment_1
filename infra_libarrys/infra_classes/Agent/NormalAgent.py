@@ -63,9 +63,4 @@ class NormalAgent(Agent):
             self.packages[(x, y)] = self.curr_node.package
             self.curr_node.remove_package()
 
-    def drop_package_if_possible(self):
-        if not self.packages:
-            return
-        package = self.curr_node.is_node_destination(self.packages)
-        if package is not None:
-            self.score += 1
+

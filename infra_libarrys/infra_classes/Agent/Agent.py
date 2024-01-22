@@ -43,3 +43,10 @@ class Agent:
                 self.curr_crossing_edge = None
             return False
         return True
+
+    def drop_package_if_possible(self):
+        if not self.packages:
+            return
+        package = self.curr_node.is_node_destination(self.packages)
+        if package is not None:
+            self.score += 1

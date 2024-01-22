@@ -146,3 +146,9 @@ class Env:
             clique.add_edge(node1, node2, distances[node1])
 
         return clique
+
+    def set_package_appear_dict(self, package_appear_dict):
+        self.package_appear_dict = package_appear_dict
+
+    def set_package_disappear_dict(self, package_disappear_dict):
+        self.package_disappear_dict = package_disappear_dict
