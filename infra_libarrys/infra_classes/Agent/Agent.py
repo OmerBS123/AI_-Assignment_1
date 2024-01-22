@@ -1,3 +1,6 @@
+import copy
+
+
 class Agent:
     def __init__(self, curr_node, env):
         self.env = env
@@ -11,9 +14,9 @@ class Agent:
 
     def __copy__(self):
         new_agent = Agent(self.curr_node, self.env)
-        new_agent.packages = self.packages
+        new_agent.packages = {copy.copy(package) for package in self.packages}
         new_agent.time_left_to_cross_edge = self.time_left_to_cross_edge
-        new_agent.curr_crossing_edge = self.curr_crossing_edge
+        new_agent.curr_crossing_edge = None
         new_agent.agent_type = self.agent_type
         new_agent.agent_color = self.agent_color
         new_agent.score = self.score
@@ -36,7 +39,7 @@ class Agent:
             if self.time_left_to_cross_edge == 0:
                 self.curr_node = self.curr_crossing_edge.get_neighbor_node(self.curr_node)
                 if self.curr_crossing_edge.is_fragile:
-                    self.curr_crossing_edge.remove_self_from_env()
+                    self.curr_crossing_edge.remove_self_from_env(env=self.env)
                 self.curr_crossing_edge = None
             return False
         return True

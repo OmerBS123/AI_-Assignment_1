@@ -45,8 +45,8 @@ def get_agents_list(parser_dict, env):
 def get_env(parser_dict):
     x = parser_dict[ParserFlags.X][0]
     y = parser_dict[ParserFlags.Y][0]
-    blocked_edges = parser_dict[ParserFlags.B]
-    fragile_edges = parser_dict[ParserFlags.F]
+    blocked_edges = set(parser_dict[ParserFlags.B])
+    fragile_edges = set(parser_dict[ParserFlags.F])
     env = Env(x, y, blocked_edges=blocked_edges, fragile_edges=fragile_edges)
     return env
 

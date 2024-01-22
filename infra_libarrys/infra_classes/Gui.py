@@ -111,18 +111,18 @@ class GraphUI:
                 agent_ui_pos_y = mid_y
                 self.canvas.create_text(agent_ui_pos_x, agent_ui_pos_y, text=curr_agent.tag, fill=curr_agent.agent_color, font=GuiFontConsts.EDGE_WEIGHT_FONT)
 
-            if curr_agent.package is not None:
-                self.canvas.create_image(agent_ui_pos_x + 30,
-                                         agent_ui_pos_y + 30,
-                                         anchor='center',
-                                         image=self.package_image)
-
-                delivery_pos_x, delivery_pos_y = curr_agent.package.get_delivery_x_y()
-                x, y = delivery_pos_x * GuiSizeConsts.SCALE_SIZE + self.offset_x, delivery_pos_y * GuiSizeConsts.SCALE_SIZE + self.offset_y
-                self.canvas.create_image(x,
-                                         y,
-                                         anchor='center',
-                                         image=self.delivery_image)
+            # if curr_agent.packages is not None:
+            #     self.canvas.create_image(agent_ui_pos_x + 30,
+            #                              agent_ui_pos_y + 30,
+            #                              anchor='center',
+            #                              image=self.package_image)
+            #
+            #     delivery_pos_x, delivery_pos_y = curr_agent.packages.get_delivery_x_y()
+            #     x, y = delivery_pos_x * GuiSizeConsts.SCALE_SIZE + self.offset_x, delivery_pos_y * GuiSizeConsts.SCALE_SIZE + self.offset_y
+            #     self.canvas.create_image(x,
+            #                              y,
+            #                              anchor='center',
+            #                              image=self.delivery_image)
 
     def update_timer_label(self, timer_label):
         current_time = timer_label

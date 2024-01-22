@@ -11,12 +11,12 @@ class Dijkstra(SearchAlgorithm):
         self.previous = {node: None for node in self.env.nodes}
         self.heap = []
         self.nodes_with_package = [node for node in self.env.nodes if node.package is not None]
-        delivery_point_coordinate = [package.get_delivery_x_y() for package in agent_packages]
+        delivery_point_coordinate = [package.get_delivery_x_y() for package in agent_packages] if agent_packages is not None else []
         self.delivery_point_nodes = [self.env.graph[x][y] for x, y in delivery_point_coordinate]
 
     def run_search(self):
         if not self.nodes_with_package and self.destination_node is None:
-            return None
+            return None, None
 
         heapq.heappush(self.heap, DistanceNodeWrapper(0, self.start_node))
 

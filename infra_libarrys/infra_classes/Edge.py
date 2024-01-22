@@ -10,6 +10,9 @@ class Edge:
     def __eq__(self, other):
         return self.nodes == other.nodes
 
+    def __hash__(self):
+        return hash(frozenset(self.nodes))
+
     def add_nodes(self, node1, node2):
         self.nodes = {node1, node2}
 
@@ -26,7 +29,7 @@ class Edge:
         coordinate_tuple = tuple(coordinate_tuple)
         switched_coordinate_tuple = (coordinate_tuple[2], coordinate_tuple[3], coordinate_tuple[0], coordinate_tuple[1])
         env.fragile_edges = env.fragile_edges - {coordinate_tuple, switched_coordinate_tuple}
-        env.blocked_edges |= coordinate_tuple
+        env.blocked_edges.add(coordinate_tuple)
 
     def get_edge_coordinate(self):
         node1, node2 = self.nodes
