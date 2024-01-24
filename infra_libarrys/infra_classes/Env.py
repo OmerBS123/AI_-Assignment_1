@@ -21,7 +21,7 @@ class Env:
         self.fragile_edges = fragile_edges
         self.update_packages_state_if_needed(start_time)
         self.package_points = {node for node in self.nodes if node.package is not None}
-        self.agent_nodes = {node for node in self.nodes if node.agent is not None}
+        self.agent_nodes = [node for node in self.nodes if node.agent is not None]
         self.delivery_points = self.get_delivery_nodes()
         self.create_all_edges()
 
@@ -127,7 +127,8 @@ class Env:
         clique = Clique()
 
         # Create a copy of the nodes and edges from the original graph
-        node_set = self.package_points | self.delivery_points | self.agent_nodes
+        node_set = self.package_points | self.delivery_points
+        node_set.update(self.agent_nodes)
 
         distance_dict = {}
 
@@ -146,7 +147,7 @@ class Env:
                 distance_dict[node1] = distances
 
             distances = distance_dict[node1]
-            clique.add_edge(node1, node2, distances[node1])
+            clique.add_edge(node1, node2, distances[node2])
 
         return clique
 

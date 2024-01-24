@@ -14,12 +14,9 @@ def main():
     env, agents_list = get_flow_args(parser_dict)
 
     env.update_packages_state_if_needed(0)
-    copy_of_env = copy.copy(env)
-
-    astar_agent = AstarAgent(env=env, curr_node=env.graph[0][0])
 
     gui = GraphUI(env, agents_list)
-    flow = Flow(env, agents_list, package_appear_dict, package_disappear_dict, gui_handler=gui)
+    flow = Flow(env, agents_list, env.package_appear_dict, env.package_disappear_dict, gui_handler=gui)
     gui.set_flow(flow)
     flow_thread = threading.Thread(target=flow.run_flow)
     flow_thread.start()

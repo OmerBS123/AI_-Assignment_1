@@ -34,5 +34,8 @@ class Node:
         return self.x, self.y
 
     def is_node_destination(self, packages):
-        node_x, node_y = self.get_x_y_coordinate()
-        return packages.pop((node_x, node_y), None)
+        x_y_coordinate = self.get_x_y_coordinate()
+        filtered_packages = {package for package in packages if package.get_delivery_x_y() == x_y_coordinate}
+        if not filtered_packages:
+            return None
+        return filtered_packages.pop()

@@ -45,22 +45,3 @@ class NormalAgent(Agent):
         else:
             dijkstra_algo = Dijkstra(start_node=self.curr_node, env=self.env)
         return dijkstra_algo
-
-    def finish_crossing_with_curr_edge(self):
-        if self.time_left_to_cross_edge > 0:
-            self.time_left_to_cross_edge -= 1
-            if self.time_left_to_cross_edge == 0:
-                self.curr_node = self.curr_crossing_edge.get_neighbor_node(self.curr_node)
-                self.curr_crossing_edge = None
-                if self.packages is None:
-                    self.pickup_package_if_exists()
-            return False
-        return True
-
-    def pickup_package_if_exists(self):
-        if self.curr_node.package is not None:
-            x, y = self.curr_node.get_x_y_coordinate()
-            self.packages[(x, y)] = self.curr_node.package
-            self.curr_node.remove_package()
-
-

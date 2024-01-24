@@ -17,7 +17,8 @@ class Edge:
         self.nodes = {node1, node2}
 
     def get_neighbor_node(self, curr_node):
-        return (self.nodes - {curr_node}).pop()
+        node_singleton = self.nodes - {curr_node}
+        return node_singleton.pop()
 
     def remove_self_from_env(self, env):
         coordinate_tuple = []

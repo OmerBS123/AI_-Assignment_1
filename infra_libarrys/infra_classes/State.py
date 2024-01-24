@@ -9,8 +9,9 @@ class State:
         return self.env == other.env and self.curr_node == other.curr_node
 
     def is_goal(self):
-        cond = self.env.package_points or self.env.delivery_points
-        return not cond
+        cond1 = self.env.package_points or self.env.delivery_points
+        cond2 = self.time > max(self.env.package_appear_dict.keys(), default=float('-inf'))
+        return not cond1 and cond2
 
     def get_edge_from_old_edge(self, old_edge):
         old_node1, old_node2 = old_edge.nodes

@@ -10,7 +10,7 @@ class Clique:
         self.nodes.add(node)
 
     def add_edge(self, node1, node2, weight):
-        edge = Edge(nodes=(node1, node2), weight=weight)
+        edge = Edge(nodes={node1, node2}, weight=weight)
         self.edges.add(edge)
         node1.edges.add(edge)
         node2.edges.add(edge)

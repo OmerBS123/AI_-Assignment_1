@@ -25,6 +25,7 @@ class GuiColorConsts:
 
 class GuiFontConsts:
     EDGE_WEIGHT_FONT = f"Helvetica {GuiSizeConsts.EDGE_WEIGHT_FONT_SIZE} bold"
+    PACKAGE_COUNT_FONT = ('Helvetica', 16, 'bold')
 
 
 class GuiImagePathConsts:

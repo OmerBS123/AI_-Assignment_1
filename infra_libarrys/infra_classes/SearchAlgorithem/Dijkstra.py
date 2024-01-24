@@ -15,7 +15,7 @@ class Dijkstra(SearchAlgorithm):
         self.delivery_point_nodes = [self.env.graph[x][y] for x, y in delivery_point_coordinate]
 
     def run_search(self):
-        if not self.nodes_with_package and self.destination_node is None:
+        if not self.nodes_with_package and not self.delivery_point_nodes:
             return None, None
 
         heapq.heappush(self.heap, DistanceNodeWrapper(0, self.start_node))

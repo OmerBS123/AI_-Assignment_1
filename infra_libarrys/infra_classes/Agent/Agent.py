@@ -6,7 +6,7 @@ class Agent:
         self.env = env
         self.curr_node = None
         self.put_self_on_node(curr_node)
-        self.packages = {}
+        self.packages = set()
         self.time_left_to_cross_edge = 0
         self.curr_crossing_edge = None
         self.agent_type = None
@@ -30,35 +30,46 @@ class Agent:
     def remove_package(self, package):
         self.packages.remove(package)
 
-    def run_agent_step(self):
-        pass
-
     def step_over_edge(self, edge):
         self.curr_crossing_edge = edge
         self.time_left_to_cross_edge = edge.weight
         self.finish_crossing_with_curr_edge()
 
     def finish_crossing_with_curr_edge(self):
+        if self.time_left_to_cross_edge <= 0:
+            return True
+        self.time_left_to_cross_edge -= 1
         if self.time_left_to_cross_edge > 0:
-            self.time_left_to_cross_edge -= 1
-            if self.time_left_to_cross_edge == 0:
-                next_node = self.curr_crossing_edge.get_neighbor_node(self.curr_node)
-                self.put_self_on_node(next_node)
-                if self.curr_crossing_edge.is_fragile:
-                    self.curr_crossing_edge.remove_self_from_env(env=self.env)
-                self.curr_crossing_edge = None
             return False
+        next_node = self.curr_crossing_edge.get_neighbor_node(self.curr_node)
+        self.put_self_on_node(next_node)
+        if self.curr_crossing_edge.is_fragile:
+            self.curr_crossing_edge.remove_self_from_env(env=self.env)
+        self.curr_crossing_edge = None
+        self.pickup_package_if_exists()
         return True
 
     def drop_package_if_possible(self):
         if not self.packages:
             return
-        package = self.curr_node.is_node_destination(self.packages)
-        if package is not None:
-            self.score += 1
+        package_to_remove = self.curr_node.is_node_destination(self.packages)
+        if package_to_remove is None:
+            return
+        self.remove_package(package_to_remove)
+        self.score += 1
 
     def put_self_on_node(self, new_curr_node):
         new_curr_node.agent = self
         if self.curr_node is not None:
             self.curr_node.agent = None
         self.curr_node = new_curr_node
+
+    def pickup_package_if_exists(self):
+        if self.curr_node.package is None:
+            return
+
+        self.packages.add(self.curr_node.package)
+        self.curr_node.remove_package()
+
+    def run_agent_step(self):
+        pass

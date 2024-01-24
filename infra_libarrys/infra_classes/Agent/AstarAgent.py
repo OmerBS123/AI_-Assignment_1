@@ -26,8 +26,8 @@ class AstarAgent(Agent):
         return a_star_algo
 
     def run_agent_step(self):
-        run_search = self.finish_crossing_with_curr_edge()
-        if not run_search:
+        make_next_step = self.finish_crossing_with_curr_edge()
+        if not make_next_step:
             return
         self.drop_package_if_possible()
         search_algo = self.get_search_algo()

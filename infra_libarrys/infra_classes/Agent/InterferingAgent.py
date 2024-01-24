@@ -46,3 +46,6 @@ class InterferingAgent(Agent):
         last_node = reduced_path[-1].original_object.get_neighbor_node(new_path[-1])
         new_path.append(last_node)
         return new_path
+
+    def pickup_package_if_exists(self):
+        pass
