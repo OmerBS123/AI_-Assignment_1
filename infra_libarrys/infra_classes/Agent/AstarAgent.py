@@ -18,6 +18,11 @@ class AstarAgent(Agent):
         search_algo = self.get_search_algo()
         return search_algo.run_search()
 
+    def get_next_step(self):
+        if not self.actions_stack:
+            return None
+        return self.actions_stack.pop()
+
     def get_search_algo(self):
         start_state = State(env=self.env, curr_node=self.curr_node, time=AgentConsts.AGENT_START_TIME)
         h = AstarNodeWrapper.get_h_for_state(start_state)
@@ -30,14 +35,7 @@ class AstarAgent(Agent):
         if not make_next_step:
             return
         self.drop_package_if_possible()
-        search_algo = self.get_search_algo()
-
-        next_node = self.get_next_node_from_search_algo(search_algo)
-        if next_node is None:
+        next_edge = self.get_next_step()
+        if next_edge is None:
             return
-        elif next_node == self.curr_node:  # if curr node is both dest and pickup
-            self.pickup_package_if_exists()
-        else:
-            edge_to_pass = self.curr_node.get_edge_from_node(next_node)
-            self.step_over_edge(edge_to_pass)
-
+        self.step_over_edge(next_edge)
