@@ -1,11 +1,15 @@
 import heapq
+import logging
 
 from infra_libarrys.infra_classes.SearchAlgorithem.SearchAlgorithm import SearchAlgorithm
 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 class Astar(SearchAlgorithm):
-    def __init__(self, start_node, original_env, destination_node=None):
+    def __init__(self, start_node, original_env, running_agent, destination_node=None):
         super().__init__(start_node=start_node, env=original_env, destination_node=destination_node)
+        self.running_agent = running_agent
         self.open_nodes = [self.start_node]
         self.closed_nodes = set()
 
@@ -26,7 +30,7 @@ class Astar(SearchAlgorithm):
                     heapq.heappush(self.open_nodes, new_node)
 
     def get_same_state_node(self, node):
-        state_singleton = {node.state == curr_node.state for curr_node in self.closed_nodes}
+        state_singleton = {curr_node for curr_node in self.closed_nodes if node.state == curr_node.state}
         if state_singleton:
             return state_singleton.pop()
         return None

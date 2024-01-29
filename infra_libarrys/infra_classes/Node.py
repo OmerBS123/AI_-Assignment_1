@@ -9,17 +9,22 @@ class Node:
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
+    def __hash__(self):
+        return hash((self.x, self.y))
+
     def add_edge(self, edge):
         self.edges.add(edge)
 
     def remove_edge(self, edge):
         self.edges.remove(edge)
 
-    def add_package(self, package):
+    def add_package(self, package, env):
         self.package = package
+        env.package_points.add(self)
 
-    def remove_package(self):
+    def remove_package(self, env):
         self.package = None
+        env.package_points.remove(self)
 
     def get_edge_from_node(self, other_node):
         for edge in self.edges:
@@ -30,6 +35,9 @@ class Node:
     def get_x_y_coordinate(self):
         return self.x, self.y
 
-    def is_node_destination(self, package):
-        node_x, node_y = self.get_x_y_coordinate()
-        return node_x == package.dest_pos_x and node_y == package.dest_pos_y
+    def is_node_destination(self, packages):
+        x_y_coordinate = self.get_x_y_coordinate()
+        filtered_packages = {package for package in packages if package.get_delivery_x_y() == x_y_coordinate}
+        if not filtered_packages:
+            return None
+        return filtered_packages.pop()

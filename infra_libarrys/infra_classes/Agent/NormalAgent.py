@@ -15,13 +15,13 @@ class NormalAgent(Agent):
     def run_agent_step(self):
         run_search = self.finish_crossing_with_curr_edge()
         if not run_search:
-            return
+            return None, None
         self.drop_package_if_possible()
         search_algo = self.get_search_algo()
 
         next_node = self.get_next_node_from_search_algo(search_algo)
         if next_node is None:
-            return
+            return None, next_node
         elif next_node == self.curr_node:  # if curr node is both dest and pickup
             self.pickup_package_if_exists()
         else:
@@ -30,7 +30,7 @@ class NormalAgent(Agent):
 
     @staticmethod
     def get_next_node_from_search_algo(search_algo):
-        path = search_algo.run_search()
+        path, _ = search_algo.run_search()
         if path is None:
             return None
         elif len(path) == 1:
@@ -40,32 +40,8 @@ class NormalAgent(Agent):
         return node
 
     def get_search_algo(self):
-        if self.package is not None:
-            destination_node = self.env.graph[self.package.dest_pos_x][self.package.dest_pos_y]
-            dijkstra_algo = Dijkstra(start_node=self.curr_node, env=self.env, destination_node=destination_node)
+        if self.packages:
+            dijkstra_algo = Dijkstra(start_node=self.curr_node, env=self.env, agent_packages=self.packages)
         else:
             dijkstra_algo = Dijkstra(start_node=self.curr_node, env=self.env)
         return dijkstra_algo
-
-    def finish_crossing_with_curr_edge(self):
-        if self.time_left_to_cross_edge > 0:
-            self.time_left_to_cross_edge -= 1
-            if self.time_left_to_cross_edge == 0:
-                self.curr_node = self.curr_crossing_edge.get_neighbor_node(self.curr_node)
-                self.curr_crossing_edge = None
-                if self.package is None:
-                    self.pickup_package_if_exists()
-            return False
-        return True
-
-    def pickup_package_if_exists(self):
-        if self.curr_node.package is not None:
-            self.package = self.curr_node.package
-            self.curr_node.remove_package()
-
-    def drop_package_if_possible(self):
-        if self.package is None:
-            return
-        if self.curr_node.is_node_destination(self.package):
-            self.package = None
-            self.score += 1

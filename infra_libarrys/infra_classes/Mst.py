@@ -13,7 +13,7 @@ class Mst:
         heap = [MstWrapper(0, start_node, None)]  # (weight, current_node, previous_node)
 
         while heap:
-            weight, current_node, previous_node = heapq.heappop(heap)
+            weight, current_node, previous_node = heapq.heappop(heap).unpack_wrapper()
 
             if current_node not in visited:
                 visited.add(current_node)
@@ -32,4 +32,4 @@ class Mst:
         self.prim(start_node)
 
     def get_mst_weight(self):
-        return sum([edge.wieght for edge in self.mst_edges])
+        return sum([edge.weight for edge in self.mst_edges])

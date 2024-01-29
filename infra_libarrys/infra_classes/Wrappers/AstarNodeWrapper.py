@@ -22,21 +22,22 @@ class AstarNodeWrapper:
     def expand(self):
         new_node_list = []
         for curr_edge in self.state.curr_node.edges:
+            previous_action = curr_edge.get_edge_coordinate()
             g = self.g + curr_edge.weight
             parent_node = self
             new_state = self.create_state_from_edge(curr_edge)
-            previous_action = curr_edge.get_edge_coordinate()
             h = self.get_h_for_state(new_state)
             new_node = AstarNodeWrapper(state=new_state, parent_node=parent_node, g=g, prev_action=previous_action, h=h)
             new_node_list.append(new_node)
 
+        return new_node_list
+
     def create_state_from_edge(self, edge):
         copy_env = copy(self.state.env)
-        new_time = self.state.time + edge.weight
         x, y = self.state.curr_node.get_x_y_coordinate()
         new_curr_node = copy_env.graph[x][y]
-        new_state = State(copy_env, curr_node=new_curr_node, time=new_time)
-        new_state.update_state(old_edge=edge)
+        new_state = State(copy_env, curr_node=new_curr_node, time=self.state.time, agent=self.state.agent)
+        new_state.update_state(old_edge=edge, time_delta=edge.weight)
         return new_state
 
     @staticmethod

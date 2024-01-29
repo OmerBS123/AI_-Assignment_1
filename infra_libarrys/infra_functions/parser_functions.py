@@ -4,6 +4,7 @@ from infra_libarrys.consts_and_enums.general_consts import GeneralPosConsts
 from infra_libarrys.consts_and_enums.EdgeConsts import BlockedEdgeConsts, FragileEdgeConsts
 from infra_libarrys.consts_and_enums.package_consts import PackageConsts
 from infra_libarrys.consts_and_enums.agents_consts import AgentConsts
+from infra_libarrys.infra_classes.Agent.AstarAgent import AstarAgent
 from infra_libarrys.infra_classes.Package import Package
 from infra_libarrys.infra_classes.Agent.InterferingAgent import InterferingAgent
 from infra_libarrys.infra_classes.Agent.HumanAgent import HumanAgent
@@ -15,8 +16,9 @@ from infra_libarrys.infra_classes.Env import Env
 def get_flow_args(parser_dict):
     env = get_env(parser_dict)
     agents_list = get_agents_list(parser_dict, env)
-    package_appear_dict, package_disappear_dict = get_package_dict(parser_dict)
-    return env, agents_list, package_appear_dict, package_disappear_dict
+    env.update_agents_list(agents_list)
+
+    return env, agents_list
 
 
 def get_package_dict(parser_dict):
@@ -33,7 +35,7 @@ def get_agents_list(parser_dict, env):
     for agent_flag, x, y in parser_dict[ParserFlags.AGENTS]:
         curr_node = env.graph[x][y]
         if agent_flag == AgentConsts.NORMAL_AGENT_FLAG:
-            agents_list.append(NormalAgent(curr_node, env))
+            agents_list.append(AstarAgent(curr_node, env))
         elif agent_flag == AgentConsts.INTERFERING_AGENT_FLAG:
             agents_list.append(InterferingAgent(curr_node, env))
         else:
@@ -43,11 +45,12 @@ def get_agents_list(parser_dict, env):
 
 
 def get_env(parser_dict):
+    package_appear_dict, package_disappear_dict = get_package_dict(parser_dict)
     x = parser_dict[ParserFlags.X][0]
     y = parser_dict[ParserFlags.Y][0]
-    blocked_edges = parser_dict[ParserFlags.B]
-    fragile_edges = parser_dict[ParserFlags.F]
-    env = Env(x, y, blocked_edges=blocked_edges, fragile_edges=fragile_edges)
+    blocked_edges = set(parser_dict[ParserFlags.B])
+    fragile_edges = set(parser_dict[ParserFlags.F])
+    env = Env(x, y, blocked_edges=blocked_edges, fragile_edges=fragile_edges, package_appear_dict=package_appear_dict, package_disappear_dict=package_disappear_dict)
     return env
 
 

@@ -111,18 +111,27 @@ class GraphUI:
                 agent_ui_pos_y = mid_y
                 self.canvas.create_text(agent_ui_pos_x, agent_ui_pos_y, text=curr_agent.tag, fill=curr_agent.agent_color, font=GuiFontConsts.EDGE_WEIGHT_FONT)
 
-            if curr_agent.package is not None:
+            if curr_agent.packages:
+                num_of_packages = len(curr_agent.packages)
                 self.canvas.create_image(agent_ui_pos_x + 30,
                                          agent_ui_pos_y + 30,
                                          anchor='center',
                                          image=self.package_image)
 
-                delivery_pos_x, delivery_pos_y = curr_agent.package.get_delivery_x_y()
-                x, y = delivery_pos_x * GuiSizeConsts.SCALE_SIZE + self.offset_x, delivery_pos_y * GuiSizeConsts.SCALE_SIZE + self.offset_y
-                self.canvas.create_image(x,
-                                         y,
-                                         anchor='center',
-                                         image=self.delivery_image)
+                self.canvas.create_text(agent_ui_pos_x + 30,
+                                        agent_ui_pos_y + 30,
+                                        text=str(num_of_packages),
+                                        anchor='center',
+                                        fill=GuiColorConsts.BLACK,
+                                        font=GuiFontConsts.PACKAGE_COUNT_FONT)
+
+                for curr_package in curr_agent.packages:
+                    delivery_pos_x, delivery_pos_y = curr_package.get_delivery_x_y()
+                    x, y = delivery_pos_x * GuiSizeConsts.SCALE_SIZE + self.offset_x, delivery_pos_y * GuiSizeConsts.SCALE_SIZE + self.offset_y
+                    self.canvas.create_image(x,
+                                             y,
+                                             anchor='center',
+                                             image=self.delivery_image)
 
     def update_timer_label(self, timer_label):
         current_time = timer_label

@@ -34,7 +34,7 @@ class InterferingAgent(Agent):
         return dijkstra_algo
 
     def get_next_node_from_search_algo(self, search_algo):
-        reduced_path = search_algo.run_search()
+        reduced_path, _ = search_algo.run_search()
         if reduced_path is None:
             return None
         path = self.convert_reduced_path(reduced_path)
@@ -46,3 +46,6 @@ class InterferingAgent(Agent):
         last_node = reduced_path[-1].original_object.get_neighbor_node(new_path[-1])
         new_path.append(last_node)
         return new_path
+
+    def pickup_package_if_exists(self):
+        pass
