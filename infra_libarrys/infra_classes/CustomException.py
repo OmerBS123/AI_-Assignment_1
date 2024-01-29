@@ -1,0 +1,2 @@
+class CounterLimitExceeded(Exception):
+    pass

@@ -6,6 +6,7 @@ class AgentConsts:
     HUMAN_AGENT_FLAG = '#H'
     INTERFERING_AGENT_FLAG = '#I'
     ASTAR_AGENT_FLAG = '#A'
+    GREEDY_ASTAR_AGENT_FLAG = '#G'
     AGENT_START_TIME = 0
     G_INITIAL_VALUE = 0
 
@@ -15,3 +16,4 @@ class AgentName:
     INTERFERING = 'interfering'
     HUMAN = 'human'
     ASTAR = 'Astar'
+    GREEDY_ASTAR = 'Greedy_Astar'

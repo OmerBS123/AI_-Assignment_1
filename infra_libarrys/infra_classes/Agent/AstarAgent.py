@@ -17,6 +17,8 @@ class AstarAgent(Agent):
     def get_actions_stack(self, curr_time):
         search_algo = self.get_search_algo(curr_time)
         last_node = search_algo.run_search()
+        if last_node is None:
+            return []
         return last_node.get_actions_path()
 
     def get_next_step(self):
