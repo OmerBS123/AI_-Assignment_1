@@ -1,7 +1,9 @@
 from copy import copy
 
+from infra_libarrys.consts_and_enums.agents_consts import AgentName
 from infra_libarrys.infra_classes.Mst import Mst
 from infra_libarrys.infra_classes.State import State
+from infra_libarrys.infra_decorators import counter_decorator
 
 
 class AstarNodeWrapper:
@@ -14,16 +16,20 @@ class AstarNodeWrapper:
         self.children = set()
 
     def __lt__(self, other):
+        if self.calculate_f() == other.calculate_f():
+            return self.state.time < other.state.time
+
         return self.calculate_f() < other.calculate_f()
 
     def calculate_f(self):
         return self.g + self.h
 
+    @counter_decorator()
     def expand(self):
         new_node_list = []
         for curr_edge in self.state.curr_node.edges:
             previous_action = curr_edge.get_edge_coordinate()
-            g = self.g + curr_edge.weight
+            g = self.g + curr_edge.weight if self.state.agent.agent_type == AgentName.ASTAR else 0
             parent_node = self
             new_state = self.create_state_from_edge(curr_edge)
             h = self.get_h_for_state(new_state)

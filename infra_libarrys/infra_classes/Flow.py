@@ -17,6 +17,8 @@ class Flow:
         while self.running:
             self.timer += 1
             self.gui_handler.update_timer(self.timer)
+            if self.timer == 19:
+                print("here")
             self.update_packages_state_if_needed()
             for curr_agent in self.agents_list:
                 curr_agent.run_agent_step(self.timer)
