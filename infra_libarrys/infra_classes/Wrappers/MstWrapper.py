@@ -6,3 +6,6 @@ class MstWrapper:
 
     def __lt__(self, other):
         return self.weight < other.weight
+
+    def unpack_wrapper(self):
+        return self.weight, self.node, self.previous_node

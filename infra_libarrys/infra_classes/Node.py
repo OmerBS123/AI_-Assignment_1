@@ -18,11 +18,13 @@ class Node:
     def remove_edge(self, edge):
         self.edges.remove(edge)
 
-    def add_package(self, package):
+    def add_package(self, package, env):
         self.package = package
+        env.package_points.add(self)
 
-    def remove_package(self):
+    def remove_package(self, env):
         self.package = None
+        env.package_points.remove(self)
 
     def get_edge_from_node(self, other_node):
         for edge in self.edges:

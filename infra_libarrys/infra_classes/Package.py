@@ -26,10 +26,10 @@ class Package:
             self.agent.remove_package(self)
             self.agent = None
         else:
-            env[self.pos_x][self.pos_y].remove_package()
+            env[self.pos_x][self.pos_y].remove_package(env=env)
 
     def add_self_to_env(self, env):
-        env.graph[self.pos_x][self.pos_y].add_package(self)
+        env.graph[self.pos_x][self.pos_y].add_package(self, env=env)
 
     def get_delivery_x_y(self):
         return self.dest_pos_x, self.dest_pos_y

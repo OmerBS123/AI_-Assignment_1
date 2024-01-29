@@ -15,23 +15,23 @@ class Flow:
         time.sleep(1)
         print("Flow thread started")
         while self.running:
-            self.update_packages_state_if_needed()
-            for curr_agent in self.agents_list:
-                curr_agent.run_agent_step()
-            time.sleep(1)
             self.timer += 1
             self.gui_handler.update_timer(self.timer)
+            self.update_packages_state_if_needed()
+            for curr_agent in self.agents_list:
+                curr_agent.run_agent_step(self.timer)
+            time.sleep(1)
             # self.gui_handler.update_ui(self.timer)
         # self.gui_handler.close_ui()
 
     def update_packages_state_if_needed(self):
         if self.timer in self.package_appear_dict:
             for curr_new_package in self.package_appear_dict[self.timer]:
-                self.env.graph[curr_new_package.pos_x][curr_new_package.pos_y].add_package(curr_new_package)
+                self.env.graph[curr_new_package.pos_x][curr_new_package.pos_y].add_package(curr_new_package, env=self.env)
 
         if self.timer in self.package_disappear_dict:
             for curr_package in self.package_disappear_dict[self.timer]:
-                curr_package.remove_self_from_env(self.env)
+                curr_package.remove_self_from_env(env=self.env)
 
     def finish_run(self):
         self.gui_handler.close_ui()

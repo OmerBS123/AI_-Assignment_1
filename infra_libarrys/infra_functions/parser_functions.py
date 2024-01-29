@@ -4,6 +4,7 @@ from infra_libarrys.consts_and_enums.general_consts import GeneralPosConsts
 from infra_libarrys.consts_and_enums.EdgeConsts import BlockedEdgeConsts, FragileEdgeConsts
 from infra_libarrys.consts_and_enums.package_consts import PackageConsts
 from infra_libarrys.consts_and_enums.agents_consts import AgentConsts
+from infra_libarrys.infra_classes.Agent.AstarAgent import AstarAgent
 from infra_libarrys.infra_classes.Package import Package
 from infra_libarrys.infra_classes.Agent.InterferingAgent import InterferingAgent
 from infra_libarrys.infra_classes.Agent.HumanAgent import HumanAgent
@@ -34,7 +35,7 @@ def get_agents_list(parser_dict, env):
     for agent_flag, x, y in parser_dict[ParserFlags.AGENTS]:
         curr_node = env.graph[x][y]
         if agent_flag == AgentConsts.NORMAL_AGENT_FLAG:
-            agents_list.append(NormalAgent(curr_node, env))
+            agents_list.append(AstarAgent(curr_node, env))
         elif agent_flag == AgentConsts.INTERFERING_AGENT_FLAG:
             agents_list.append(InterferingAgent(curr_node, env))
         else:

@@ -1,6 +1,3 @@
-import copy
-
-
 class Agent:
     def __init__(self, curr_node, env):
         self.env = env
@@ -47,6 +44,7 @@ class Agent:
             self.curr_crossing_edge.remove_self_from_env(env=self.env)
         self.curr_crossing_edge = None
         self.pickup_package_if_exists()
+        self.drop_package_if_possible() #TODO: chaeck if destination == pickup
         return True
 
     def drop_package_if_possible(self):
@@ -61,7 +59,7 @@ class Agent:
     def put_self_on_node(self, new_curr_node):
         new_curr_node.agent = self
         if self.curr_node is not None:
-            self.curr_node.agent = None
+            self.env.switch_agent_nodes(old_node=self.curr_node, new_node=new_curr_node)
         self.curr_node = new_curr_node
 
     def pickup_package_if_exists(self):
@@ -69,7 +67,7 @@ class Agent:
             return
 
         self.packages.add(self.curr_node.package)
-        self.curr_node.remove_package()
+        self.curr_node.remove_package(env=self.env)
 
     def run_agent_step(self):
         pass
