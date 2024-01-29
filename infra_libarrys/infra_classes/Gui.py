@@ -15,7 +15,7 @@ class GraphUI:
         self.canvas.pack()
 
         self.timer_label = tk.Label(self.root, text="Timer: 0")
-        self.timer_label.pack(side=tk.TOP)
+        self.timer_label.pack(side=tk.TOP, anchor=tk.CENTER)
 
         self.scoreboard_text = Text(self.root, height=10, width=30, wrap="none")
         self.scoreboard_text.pack(side=RIGHT, fill=Y)

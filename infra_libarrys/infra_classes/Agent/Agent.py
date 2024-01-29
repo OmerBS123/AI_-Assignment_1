@@ -15,8 +15,11 @@ class Agent:
         x, y = original_agent.curr_node.get_x_y_coordinate()
         new_curr_node = new_env.graph[x][y]
         new_agent = cls(new_curr_node, new_env)
-        old_agent_package_coordinate = {(package.pos_x, package.pos_y) for package in original_agent.packages}
-        new_agent.packages = {package for package in created_packages if (package.pos_x, package.pos_y) in old_agent_package_coordinate}
+        old_agent_package_coordinate = {(package.pos_x, package.pos_y, package.time_appearance, package.time_delivery) for package in original_agent.packages}
+        new_agent_packages = {package for package in created_packages if (package.pos_x, package.pos_y, package.time_appearance, package.time_delivery) in old_agent_package_coordinate}
+        new_agent.packages = new_agent_packages
+        for package in new_agent_packages:
+            package.agent = new_agent
         new_agent.time_left_to_cross_edge = original_agent.time_left_to_cross_edge
         new_agent.curr_crossing_edge = None
         new_agent.agent_type = original_agent.agent_type
@@ -24,8 +27,10 @@ class Agent:
         new_agent.score = original_agent.score
         return new_agent
 
-    def remove_package(self, package):
+    def drop_package(self, package):
         self.packages.remove(package)
+        package.agent = None
+        self.env.remove_package_after_drop(package)
 
     def step_over_edge(self, edge):
         self.curr_crossing_edge = edge
@@ -44,7 +49,7 @@ class Agent:
             self.curr_crossing_edge.remove_self_from_env(env=self.env)
         self.curr_crossing_edge = None
         self.pickup_package_if_exists()
-        self.drop_package_if_possible() #TODO: chaeck if destination == pickup
+        self.drop_package_if_possible()  # TODO: chaeck if destination == pickup
         return True
 
     def drop_package_if_possible(self):
@@ -53,7 +58,7 @@ class Agent:
         package_to_remove = self.curr_node.is_node_destination(self.packages)
         if package_to_remove is None:
             return
-        self.remove_package(package_to_remove)
+        self.drop_package(package_to_remove)
         self.score += 1
 
     def put_self_on_node(self, new_curr_node):
@@ -67,7 +72,8 @@ class Agent:
             return
 
         self.packages.add(self.curr_node.package)
-        self.curr_node.remove_package(env=self.env)
+        self.curr_node.package.agent = self
+        self.env.remove_package_after_pickup(self.curr_node.package)
 
     def run_agent_step(self):
         pass

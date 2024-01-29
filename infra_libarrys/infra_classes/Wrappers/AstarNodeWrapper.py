@@ -17,7 +17,7 @@ class AstarNodeWrapper:
 
     def __lt__(self, other):
         if self.calculate_f() == other.calculate_f():
-            return self.state.time < other.state.time
+            return self.state.agent.score > other.state.agent.score
 
         return self.calculate_f() < other.calculate_f()
 
@@ -35,6 +35,9 @@ class AstarNodeWrapper:
             h = self.get_h_for_state(new_state)
             new_node = AstarNodeWrapper(state=new_state, parent_node=parent_node, g=g, prev_action=previous_action, h=h)
             new_node_list.append(new_node)
+
+        no_op_node = self.get_no_op_action()
+        new_node_list.append(no_op_node)
 
         return new_node_list
 
@@ -57,8 +60,22 @@ class AstarNodeWrapper:
         return self.get_actions_path_helper(self, [])
 
     @staticmethod
-    def get_actions_path_helper(state, path_acc):
-        if state.prev_action is not None:
-            path_acc.append(state.prev_action)
-            state.get_actions_path_helper(state.parent_node, path_acc)
+    def get_actions_path_helper(node, path_acc):
+        if node.parent_node is not None:
+            path_acc.append(node.prev_action)
+            node.get_actions_path_helper(node.parent_node, path_acc)
         return path_acc
+
+    def get_no_op_action(self):
+        previous_action = None
+        g = self.g + 1
+        parent_node = self
+        copy_env = copy(self.state.env)
+        x, y = self.state.curr_node.get_x_y_coordinate()
+        new_curr_node = copy_env.graph[x][y]
+        new_state = State(copy_env, curr_node=new_curr_node, time=self.state.time, agent=new_curr_node.agent)
+        new_state.update_packages_state_if_needed(1)
+        new_state.all_agents_pickup_and_drop_package()
+        h = self.get_h_for_state(new_state)
+        new_node = AstarNodeWrapper(state=new_state, parent_node=parent_node, g=g, prev_action=previous_action, h=h)
+        return new_node

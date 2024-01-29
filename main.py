@@ -13,8 +13,6 @@ def main():
     parser_dict = parse_args(config_path)
     env, agents_list = get_flow_args(parser_dict)
 
-    env.update_packages_state_if_needed(0)
-
     gui = GraphUI(env, agents_list)
     flow = Flow(env, agents_list, env.package_appear_dict, env.package_disappear_dict, gui_handler=gui)
     gui.set_flow(flow)

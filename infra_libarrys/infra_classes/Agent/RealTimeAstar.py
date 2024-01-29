@@ -6,25 +6,24 @@ from infra_libarrys.infra_classes.State import State
 from infra_libarrys.infra_classes.Wrappers.AstarNodeWrapper import AstarNodeWrapper
 
 
-class AstarAgent(Agent):
+class RealTimeAstar(Agent):
     def __init__(self, curr_node, env):
         super().__init__(curr_node, env)
-        self.agent_type = AgentName.ASTAR
-        self.tag = AgentConsts.ASTAR_AGENT_FLAG
-        self.agent_color = GuiColorConsts.SILVER
-        self.actions_stack = []
+        self.agent_type = AgentName.REAL_TIME_ASTAR
+        self.tag = AgentConsts.REAL_TIME_ASTAR_FLAG
+        self.agent_color = GuiColorConsts.ORANGE
 
-    def get_actions_stack(self, curr_time):
+    def get_next_action(self, curr_time):
         search_algo = self.get_search_algo(curr_time)
         last_node = search_algo.run_search()
         if last_node is None:
             return []
-        return last_node.get_actions_path()
-
-    def get_next_step(self):
-        if not self.actions_stack:
+        action_path = last_node.get_actions_path()
+        if not action_path:
             return None
-        edge_coordinates = self.actions_stack.pop()
+        return action_path.pop()
+
+    def get_next_step(self, edge_coordinates):
         if edge_coordinates is None:
             return None
         return self.env.get_edge_from_coordinates(edge_coordinates)
@@ -37,14 +36,11 @@ class AstarAgent(Agent):
         return a_star_algo
 
     def run_agent_step(self, curr_time=AgentConsts.AGENT_START_TIME):
-        self.pickup_package_if_exists()
-        self.drop_package_if_possible() #TODO: chaeck if destination == pickup
-        if not self.actions_stack:
-            self.actions_stack = self.get_actions_stack(curr_time)
         make_next_step = self.finish_crossing_with_curr_edge()
         if not make_next_step:
             return
-        next_edge = self.get_next_step()
+        next_edge_coordinate = self.get_next_action(curr_time)
+        next_edge = self.get_next_step(next_edge_coordinate)
         if next_edge is None:
             return
         self.step_over_edge(next_edge)

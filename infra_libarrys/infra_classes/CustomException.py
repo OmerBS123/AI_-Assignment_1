@@ -1,2 +1,6 @@
-class CounterLimitExceeded(Exception):
+class CounterLimitExceededAstar(Exception):
+    pass
+
+
+class CounterLimitExceededRtaAstar(Exception):
     pass
