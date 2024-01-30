@@ -8,7 +8,6 @@ from infra_libarrys.infra_classes.Agent.AstarAgent import AstarAgent
 from infra_libarrys.infra_classes.Package import Package
 from infra_libarrys.infra_classes.Agent.InterferingAgent import InterferingAgent
 from infra_libarrys.infra_classes.Agent.HumanAgent import HumanAgent
-from infra_libarrys.infra_classes.Agent.NormalAgent import NormalAgent
 from infra_libarrys.consts_and_enums.parser_consts import ParserFlags
 from infra_libarrys.infra_classes.Env import Env
 
@@ -27,7 +26,7 @@ def get_package_dict(parser_dict):
     for package in parser_dict[ParserFlags.P]:
         package_appear_dict[package.time_appearance].append(package)
         package_disappear_dict[package.time_delivery + 1].append(package)
-    return  package_appear_dict, package_disappear_dict
+    return package_appear_dict, package_disappear_dict
 
 
 def get_agents_list(parser_dict, env):

@@ -1,7 +1,7 @@
 import heapq
 import logging
 
-from infra_libarrys.infra_classes.CustomException import CounterLimitExceeded
+from infra_libarrys.infra_classes.CustomException import CounterLimitExceededAstar, CounterLimitExceededRtaAstar
 from infra_libarrys.infra_classes.SearchAlgorithem.SearchAlgorithm import SearchAlgorithm
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -30,8 +30,10 @@ class Astar(SearchAlgorithm):
                     new_node_list = curr_node.expand()
                     for new_node in new_node_list:
                         heapq.heappush(self.open_nodes, new_node)
-        except CounterLimitExceeded as _:
+        except CounterLimitExceededAstar as _:
             return None
+        except CounterLimitExceededRtaAstar as _:
+            return curr_node
 
     def get_same_state_node(self, node):
         state_singleton = {curr_node for curr_node in self.closed_nodes if node.state == curr_node.state}

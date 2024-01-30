@@ -46,7 +46,6 @@ class Env:
     def __eq__(self, other):
         cond1 = self.package_points == other.package_points
         cond2 = self.delivery_points == other.delivery_points
-        # cond3 = self.fragile_edges == other.fragile_edges
         return cond1 and cond2
 
     def copy_packages(self, copy_env, old_package_created, copy_package_created):
@@ -55,9 +54,8 @@ class Env:
         copy_env.package_points = {copy_env.graph[x][y] for x, y in package_coordinate}
 
         for package_node in self.package_points:
-            x, y = package_node.get_x_y_coordinate()
             package_copy = copy(package_node.package)
-            copy_env.graph[x][y].add_package(package_copy, env=copy_env)
+            copy_env.add_package(package_copy)
             old_package_created.add(package_node.package)
             copy_package_created.add(package_copy)
 
@@ -174,7 +172,8 @@ class Env:
     def update_packages_state_if_needed(self, timer):
         if self.package_appear_dict is not None and timer in self.package_appear_dict:
             for curr_new_package in self.package_appear_dict[timer]:
-                self.graph[curr_new_package.pos_x][curr_new_package.pos_y].add_package(curr_new_package, env=self)
+                # self.graph[curr_new_package.pos_x][curr_new_package.pos_y].add_package(curr_new_package, env=self)
+                self.add_package(curr_new_package)
 
         if self.package_disappear_dict is not None and timer in self.package_disappear_dict:
             for curr_package in self.package_disappear_dict[timer]:
@@ -188,3 +187,30 @@ class Env:
         index_to_insert = self.agent_nodes.index(old_node)
         self.agent_nodes.remove(old_node)
         self.agent_nodes.insert(index_to_insert, new_node)
+
+    def remove_package_from_env(self, package):
+        package_node = self.graph[package.pos_x][package.pos_y]
+        package_delivery_node = self.graph[package.dest_pos_x][package.dest_pos_y]
+        if package_node in self.package_points:  # package already delivered
+            package_node.package = None
+            self.package_points.remove(package_node)
+        if package_delivery_node in self.delivery_points:
+            self.delivery_points.remove(package_delivery_node)
+
+    def remove_package_after_pickup(self, package):
+        package_node = self.graph[package.pos_x][package.pos_y]
+        if package_node in self.package_points:
+            package_node.package = None
+            self.package_points.remove(package_node)
+
+    def remove_package_after_drop(self, package):
+        package_delivery_node = self.graph[package.dest_pos_x][package.dest_pos_y]
+        if package_delivery_node in self.delivery_points:
+            self.delivery_points.remove(package_delivery_node)
+
+    def add_package(self, package):
+        package_node = self.graph[package.pos_x][package.pos_y]
+        package_delivery_node = self.graph[package.dest_pos_x][package.dest_pos_y]
+        package_node.package = package
+        self.delivery_points.add(package_delivery_node)
+        self.package_points.add(package_node)

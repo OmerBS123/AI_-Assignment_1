@@ -17,7 +17,7 @@ class Flow:
         while self.running:
             self.timer += 1
             self.gui_handler.update_timer(self.timer)
-            if self.timer == 19:
+            if self.timer == 11:
                 print("here")
             self.update_packages_state_if_needed()
             for curr_agent in self.agents_list:
@@ -29,7 +29,8 @@ class Flow:
     def update_packages_state_if_needed(self):
         if self.timer in self.package_appear_dict:
             for curr_new_package in self.package_appear_dict[self.timer]:
-                self.env.graph[curr_new_package.pos_x][curr_new_package.pos_y].add_package(curr_new_package, env=self.env)
+                self.env.add_package(curr_new_package)
+                # self.env.graph[curr_new_package.pos_x][curr_new_package.pos_y].add_package(curr_new_package, env=self.env)
 
         if self.timer in self.package_disappear_dict:
             for curr_package in self.package_disappear_dict[self.timer]:

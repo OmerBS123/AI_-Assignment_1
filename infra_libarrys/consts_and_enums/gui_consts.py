@@ -1,6 +1,6 @@
 class GuiSizeConsts:
     OVAL_SIZE = 40
-    SCALE_SIZE = 160
+    SCALE_SIZE = 100
     LINE_SIZE = OVAL_SIZE / 2
     EDGE_WEIGHT_FONT_SIZE = 24
     SECOND_IN_MILLI = 1000
@@ -21,6 +21,7 @@ class GuiColorConsts:
     GREY = "grey"
     PINK = "pink"
     SILVER = 'silver'
+    YELLOW = 'yellow'
 
 
 class GuiFontConsts:
