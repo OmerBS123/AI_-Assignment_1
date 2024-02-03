@@ -13,13 +13,13 @@ class AstarAgent(Agent):
         self.tag = AgentConsts.ASTAR_AGENT_FLAG
         self.agent_color = GuiColorConsts.SILVER
         self.goal_score = goal_score
-        self.actions_stack = []
+        self.actions_stack = None
 
     def get_actions_stack(self, curr_time):
         search_algo = self.get_search_algo(curr_time)
         last_node = search_algo.run_search()
         if last_node is None:
-            return None
+            return []
         return last_node.get_actions_path()
 
     def get_next_step(self):
@@ -40,7 +40,7 @@ class AstarAgent(Agent):
     def run_agent_step(self, curr_time=AgentConsts.AGENT_START_TIME):
         self.pickup_package_if_exists()
         self.drop_package_if_possible()
-        if self.actions_stack is not None:
+        if self.actions_stack is None:
             self.actions_stack = self.get_actions_stack(curr_time)
         make_next_step = self.finish_crossing_with_curr_edge()
         if not make_next_step:

@@ -18,6 +18,8 @@ class Flow:
         print("Flow thread started")
         while self.running:
             self.timer += 1
+            if self.timer == 6:
+                print("here")
             self.gui_handler.update_timer(self.timer)
             self.update_packages_state_if_needed()
             for curr_agent in self.agents_list:
@@ -43,5 +45,5 @@ class Flow:
 
     def should_finish(self):
         cond1 = self.timer > self.final_time
-        cond2 = self.timer > self.last_package_appear_time and not self.env.package_points
-        return cond1 and cond2
+        cond2 = self.timer > self.last_package_appear_time and not self.env.delivery_points
+        return cond1 or cond2

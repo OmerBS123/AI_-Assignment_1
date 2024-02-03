@@ -4,14 +4,16 @@ from infra_libarrys.infra_classes.Agent.Agent import Agent
 from infra_libarrys.infra_classes.SearchAlgorithem.Astar import Astar
 from infra_libarrys.infra_classes.State import State
 from infra_libarrys.infra_classes.Wrappers.AstarNodeWrapper import AstarNodeWrapper
+from infra_libarrys.infra_decorators import reset_counter
 
 
 class RealTimeAstar(Agent):
-    def __init__(self, curr_node, env):
+    def __init__(self, curr_node, env, goal_score):
         super().__init__(curr_node, env)
         self.agent_type = AgentName.REAL_TIME_ASTAR
         self.tag = AgentConsts.REAL_TIME_ASTAR_FLAG
         self.agent_color = GuiColorConsts.ORANGE
+        self.goal_score = goal_score
 
     def get_next_action(self, curr_time):
         search_algo = self.get_search_algo(curr_time)
@@ -21,15 +23,16 @@ class RealTimeAstar(Agent):
         action_path = last_node.get_actions_path()
         if not action_path:
             return None
+        self.reset_agent_counter()
         return action_path.pop()
 
     def get_next_step(self, edge_coordinates):
-        if edge_coordinates is None:
+        if not edge_coordinates:
             return None
         return self.env.get_edge_from_coordinates(edge_coordinates)
 
     def get_search_algo(self, curr_time):
-        start_state = State(env=self.env, curr_node=self.curr_node, time=curr_time, agent=self)
+        start_state = State(env=self.env, curr_node=self.curr_node, time=curr_time, agent=self, goal_score=self.goal_score)
         h = AstarNodeWrapper.get_h_for_state(start_state)
         first_a_star_node = AstarNodeWrapper(state=start_state, parent_node=None, g=AgentConsts.G_INITIAL_VALUE, h=h)
         a_star_algo = Astar(start_node=first_a_star_node, original_env=self.env, running_agent=self)
@@ -44,3 +47,7 @@ class RealTimeAstar(Agent):
         if next_edge is None:
             return
         self.step_over_edge(next_edge)
+
+    @staticmethod
+    def reset_agent_counter():
+        reset_counter()
