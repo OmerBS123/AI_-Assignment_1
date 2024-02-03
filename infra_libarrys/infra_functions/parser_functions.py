@@ -34,7 +34,7 @@ def get_agents_list(parser_dict, env):
     for agent_flag, x, y in parser_dict[ParserFlags.AGENTS]:
         curr_node = env.graph[x][y]
         if agent_flag == AgentConsts.NORMAL_AGENT_FLAG:
-            agents_list.append(AstarAgent(curr_node, env))
+            agents_list.append(AstarAgent(curr_node, env, get_goal_score(env)))
         elif agent_flag == AgentConsts.INTERFERING_AGENT_FLAG:
             agents_list.append(InterferingAgent(curr_node, env))
         else:
@@ -92,3 +92,7 @@ def parse_agent_flag(line, parser_dict):
     agent_flag = splitted_line[AgentConsts.POS_FLAG]
     agent_tuple = (agent_flag, pos_x, pos_y)
     parser_dict[ParserFlags.AGENTS].append(agent_tuple)
+
+
+def get_goal_score(env):
+    return sum(len(lst) for lst in env.package_appear_dict.values())
