@@ -10,6 +10,8 @@ class Flow:
         self.timer = 0
         self.gui_handler = gui_handler
         self.running = True
+        self.final_time = max(self.package_disappear_dict.keys())
+        self.last_package_appear_time = max(self.package_appear_dict.keys())
 
     def run_flow(self):
         time.sleep(1)
@@ -17,13 +19,13 @@ class Flow:
         while self.running:
             self.timer += 1
             self.gui_handler.update_timer(self.timer)
-            if self.timer == 11:
-                print("here")
             self.update_packages_state_if_needed()
             for curr_agent in self.agents_list:
                 curr_agent.run_agent_step(self.timer)
             time.sleep(1)
-            # self.gui_handler.update_ui(self.timer)
+            if self.should_finish():
+                self.finish_run()
+
         # self.gui_handler.close_ui()
 
     def update_packages_state_if_needed(self):
@@ -38,3 +40,8 @@ class Flow:
 
     def finish_run(self):
         self.gui_handler.close_ui()
+
+    def should_finish(self):
+        cond1 = self.timer > self.final_time
+        cond2 = self.timer > self.last_package_appear_time and not self.env.package_points
+        return cond1 and cond2

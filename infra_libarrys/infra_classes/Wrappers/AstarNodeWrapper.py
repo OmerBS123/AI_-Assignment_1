@@ -45,7 +45,7 @@ class AstarNodeWrapper:
         copy_env = copy(self.state.env)
         x, y = self.state.curr_node.get_x_y_coordinate()
         new_curr_node = copy_env.graph[x][y]
-        new_state = State(copy_env, curr_node=new_curr_node, time=self.state.time, agent=self.state.agent)
+        new_state = State(copy_env, curr_node=new_curr_node, time=self.state.time, agent=self.state.agent, goal_score=self.state.goal_score)
         new_state.update_state(old_edge=edge, time_delta=edge.weight)
         return new_state
 
@@ -73,7 +73,7 @@ class AstarNodeWrapper:
         copy_env = copy(self.state.env)
         x, y = self.state.curr_node.get_x_y_coordinate()
         new_curr_node = copy_env.graph[x][y]
-        new_state = State(copy_env, curr_node=new_curr_node, time=self.state.time, agent=new_curr_node.agent)
+        new_state = State(copy_env, curr_node=new_curr_node, time=self.state.time, agent=new_curr_node.agent, goal_score=self.state.goal_score)
         new_state.update_packages_state_if_needed(1)
         new_state.all_agents_pickup_and_drop_package()
         h = self.get_h_for_state(new_state)
